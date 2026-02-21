@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiqueyasFinance | Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bibliotecas Premium (PDF e Gráficos) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#d4af37',       /* Dourado Metálico */
+                            goldDark: '#b5952f',
+                            black: '#0a0a0a',      /* Fundo Principal */
+                            card: '#141414',       /* Cartões */
+                            border: '#262626',     /* Bordas sutis */
+                            text: '#f3f4f6',       /* Texto claro */
+                            muted: '#737373',      /* Texto secundário */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #000000;
+        }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        .slide-up { animation: slideUp 0.4s ease-out; }
+        .slide-in-right { animation: slideInRight 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        /* Custom Range Slider Premium */
+        input[type=range] { -webkit-appearance: none; background: transparent; width: 100%; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #d4af37; margin-top: -7px; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); cursor: pointer; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #262626; border-radius: 2px; }
+        
+        /* Ocultar barra de rolagem */
+        ::-webkit-scrollbar { width: 4px; height: 4px; background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 2px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Gradiente para o Dourado */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #fbf5b7, #d4af37, #b5952f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Animação do Cérebro/Análise */
+        .pulse-gold { animation: pulseGold 2s infinite; }
+        @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+    </style>
+</head>
+<body class="bg-brand-black text-brand-text min-h-screen flex justify-center transition-colors duration-300">
+
+    <!-- Container Principal Responsivo -->
+    <div id="app" class="w-full bg-brand-black min-h-screen relative flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- Menu Lateral (Desktop) / Inferior (Mobile) -->
+        <nav id="bottom-nav" class="fixed bottom-0 w-full bg-brand-black/95 backdrop-blur-xl border-t border-brand-border flex justify-evenly py-3 px-0 z-40 md:relative md:w-64 md:h-screen md:flex-col md:justify-start md:pt-8 md:px-6 md:border-t-0 md:border-r transition-all" style="display: none;">
+            
+            <div id="desktop-logo" class="hidden md:flex flex-col items-center justify-center mb-10 mt-4"></div>
+
+            <button data-nav="dashboard" onclick="window.router.navigate('dashboard')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span id="nav-lbl-dashboard" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Início</span>
+            </button>
+            
+            <button data-nav="analysis" onclick="window.router.navigate('analysis')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                <span id="nav-lbl-analysis" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Análise</span>
+            </button>
+
+            <!-- Lançar -->
+            <button data-nav="transactions" onclick="window.router.navigate('transactions')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 group relative -top-6 md:top-0 md:mt-2">
+                <div class="bg-brand-gold text-brand-black p-3 md:p-2 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.3)] md:shadow-none group-hover:scale-105 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                </div>
+                <span id="nav-lbl-transactions" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 md:block hidden">Lançar</span>
+            </button>
+            
+            <button data-nav="goals" onclick="window.router.navigate('goals')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span id="nav-lbl-goals" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Metas</span>
+            </button>
+
+            <button data-nav="feedback" onclick="window.router.navigate('feedback')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                <span id="nav-lbl-feedback" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Feedback</span>
+            </button>
+            
+            <button data-nav="settings" onclick="window.router.navigate('settings')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span id="nav-lbl-settings" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Ajustes</span>
+            </button>
+        </nav>
+
+        <!-- Área de Conteúdo Central -->
+        <main id="main-content" class="flex-1 overflow-y-auto px-6 py-8 pb-32 md:pb-8 md:px-12 relative z-10 flex flex-col w-full h-screen">
+            <!-- Loader Inicial -->
+            <div class="flex flex-col items-center justify-center h-full flex-1 space-y-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-gold"></div>
+                <p class="text-brand-gold font-semibold text-xs tracking-widest uppercase">MiqueyasFinance</p>
+            </div>
+        </main>
+
+        <!-- Modais e Toasts -->
+        <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-brand-card border border-brand-border text-brand-gold px-6 py-3 rounded-2xl shadow-2xl z-50 transition-all duration-300 transform opacity-0 -translate-y-10 pointer-events-none text-center font-bold text-sm flex items-center gap-2">
+            <svg id="toast-icon-svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span id="toast-msg">Mensagem</span>
+        </div>
+
+        <!-- Área de Geração de PDF (Oculta) -->
+        <div id="pdf-container" class="hidden"></div>
+    </div>
+
+    <!-- Modais Flutuantes globais (Caixinhas e Boas Vindas) -->
+    <div id="caixinha-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-brand-card border border-brand-border p-8 rounded-3xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300" id="caixinha-modal-content">
+            <!-- Injetado dinamicamente -->
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ==========================================
+        // COLE AQUI O LINK DA SUA LOGO !
+        const LINK_DA_SUA_LOGO = ""; 
+        // ==========================================
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9wroNYOQyg-bGfpcJoqeyftyncUdoewg",
+            authDomain: "miqueyasfinance.firebaseapp.com",
+            projectId: "miqueyasfinance",
+            storageBucket: "miqueyasfinance.firebasestorage.app",
+            messagingSenderId: "620156292282",
+            appId: "1:620156292282:web:60bfd3195f6aed0a100683",
+            measurementId: "G-H89T8YLQWL"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Define a fonte base do Chart.js para combinar com o tema
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#737373';
+
+        // --- SISTEMA DE TRADUÇÃO (i18n) ---
+        window.Locales = {
+            en: {
+                "Início": "Home", "Análise": "Analysis", "Lançar": "Launch", "Metas": "Goals", "Feedback": "Feedback", "Ajustes": "Settings",
+                "Membro Premium": "Premium Member", "Património Atual": "Current Wealth", "Património no Fim do Mês": "End of Month Wealth",
+                "Contas + Caixinhas": "Accounts + Goals", "Global": "All Time", "Mensal": "Monthly", "Entradas": "Income", "Saídas": "Expenses",
+                "Saldos nas Carteiras": "Wallet Balances", "Atual": "Current", "Últimos Lançamentos": "Recent Transactions",
+                "Ver Tudo &rarr;": "See All &rarr;", "Nenhum lançamento recente": "No recent transactions", "Regra de Ouro (Orçamento)": "Golden Rule (Budget)",
+                "Meta": "Target", "Limite": "Limit", "Crescimento Positivo": "Positive Growth", "Atenção Patrimonial": "Wealth Alert",
+                "Orçamento Estourado": "Over Budget", "Limite Próximo": "Nearing Limit", "Raio-X de Gastos": "Expense X-Ray",
+                "Aguardando lançamentos para análise.": "Waiting for transactions to analyze.", "Inteligência Financeira": "Financial Intelligence",
+                "Análise automatizada baseada no teu comportamento.": "Automated analysis based on your behavior.", "Caixinhas VIP": "VIP Goals",
+                "Guarda dinheiro de forma direcionada. O saldo aqui continua a contar no teu património total.": "Save money with a purpose. The balance here counts towards your total wealth.",
+                "Total nas Caixinhas": "Total in Goals", "concluído": "completed", "Guardar": "Save", "Resgatar": "Redeem", "Nova Caixinha": "New Goal",
+                "Histórico": "History", "Baixar PDF VIP": "Download VIP PDF", "Tipos: Todos": "Types: All", "Contas: Todas": "Accounts: All",
+                "Categorias: Todas": "Categories: All", "Nenhuma transação encontrada": "No transactions found", "Apagar": "Delete",
+                "Novo Lançamento": "New Transaction", "Despesa": "Expense", "Receita": "Income", "Valor da Transação": "Transaction Amount",
+                "Descrição do lançamento": "Transaction description", "Selecione a Carteira": "Select Wallet", "Categoria da Despesa": "Expense Category",
+                "Confirmar Lançamento": "Confirm Transaction", "Perfil do Membro": "Member Profile", "Nome de Exibição": "Display Name", "Salvar": "Save",
+                "Carteiras": "Wallets", "+ Nova": "+ New", "Metas de Orçamento": "Budget Goals", "+ Categoria": "+ Category", "Ajuda e Suporte": "Help & Support",
+                "Rever Tutorial Premium": "Review Premium Tutorial", "Zona de Risco": "Danger Zone", "Zerar Todos os Lançamentos e Caixinhas": "Reset All Data",
+                "Isto apagará todo o histórico, saldos e caixinhas. Tens a certeza?": "This will delete all history, balances, and goals. Are you sure?",
+                "Confirmar": "Confirm", "Cancelar": "Cancel", "Sair do Aplicativo": "Log Out", "Mensagem": "Message", "Enviar Feedback": "Send Feedback",
+                "Bem-vindo(a)": "Welcome", "Como te podemos chamar?": "What should we call you?", "Continuar": "Continue", "Passo 1 de 3": "Step 1 of 3",
+                "Tuas Carteiras": "Your Wallets", "Adiciona os locais onde guardas dinheiro.": "Add the places where you keep your money.",
+                "+ Adicionar Carteira": "+ Add Wallet", "Avançar": "Next", "Passo 2 de 3": "Step 2 of 3", "Regras de Divisão": "Division Rules",
+                "Como categorizas os teus gastos?": "How do you categorize your expenses?", "+ Adicionar Categoria": "+ Add Category",
+                "Último Passo": "Last Step", "O Orçamento": "The Budget", "Estabelece limites percentuais para manter a tua riqueza.": "Set percentage limits to maintain your wealth.",
+                "Finalizar Configuração": "Finish Setup", "Idioma": "Language", "Mês:": "Month:", "Total Distribuído: {total}% (exigido 100%)": "Total Distributed: {total}% (100% required)",
+                "Alocado: {total}%": "Allocated: {total}%", "Voltar": "Back",
+                "Tutorial Premium": "Premium Tutorial", "O Poder do Controle": "The Power of Control",
+                "Aprende a dominar as tuas finanças com a nossa metodologia.": "Learn to master your finances with our methodology.",
+                "1. Início & Análise": "1. Home & Analysis", "2. Tuas Carteiras": "2. Your Wallets", "3. Caixinhas e Orçamento": "3. Goals and Budget",
+                "4. Relatório VIP": "4. VIP Report", "Entendido, vamos a isso!": "Got it, let's go!",
+                "Acompanha o teu Património e usa o ecrã de Análise para ver os insights gerados sobre os teus hábitos.": "Track your wealth and use the Analysis screen to see insights generated about your habits.",
+                "Podes criar carteiras para o Nubank, MBWay ou dinheiro físico. Todo o registo será vinculado a uma carteira, atualizando o saldo na hora.": "You can create wallets for your bank, cash, or e-wallets. Every record will be linked to a wallet, updating the balance instantly.",
+                "No painel, observa as barras do Orçamento. Cria Caixinhas para os teus sonhos, transferindo fundos das tuas carteiras.": "On the dashboard, observe the Budget bars. Create Goals for your dreams by transferring funds from your wallets.",
+                "No teu Histórico, podes descarregar a qualquer momento um Relatório Financeiro em PDF.": "In your History, you can download a Financial Report in PDF at any time.",
+                "Acesso Exclusivo": "Exclusive Access", "E-mail de Membro": "Member E-mail", "Senha": "Password", "Acessar Conta": "Login",
+                "Guardar Dinheiro": "Save Money", "Resgatar Dinheiro": "Redeem Money",
+                "De qual carteira o dinheiro vai sair?": "Which wallet will the money come from?",
+                "Para qual carteira o dinheiro vai voltar?": "Which wallet will the money return to?",
+                "Valor": "Amount",
+                "Aguarde...": "Please wait...", "Credenciais inválidas.": "Invalid credentials.", "Perfil atualizado!": "Profile updated!",
+                "É necessário pelo menos 1 conta.": "At least 1 account is required.", "É necessário pelo menos 1 categoria.": "At least 1 category is required.",
+                "Escreve algo primeiro.": "Write something first.", "Feedback enviado com sucesso!": "Feedback sent successfully!",
+                "Erro ao enviar. Tenta novamente.": "Error sending. Try again.", "Resgata o dinheiro da caixinha antes de a excluíres.": "Redeem the money from the goal before deleting it.",
+                "Valor inválido.": "Invalid amount.", "Saldo insuficiente na carteira escolhida.": "Insufficient balance in the chosen wallet.",
+                "Valor indisponível na caixinha.": "Amount unavailable in the goal.", "Dinheiro Guardado com Sucesso!": "Money Saved Successfully!",
+                "Dinheiro Resgatado com Sucesso!": "Money Redeemed Successfully!", "A gerar PDF, aguarde...": "Generating PDF, please wait...",
+                "PDF VIP baixado com sucesso!": "VIP PDF downloaded successfully!", "Preencha todos os campos.": "Fill in all fields.",
+                "Salvo com sucesso!": "Saved successfully!", "Lançamento apagado.": "Transaction deleted.", "Histórico e Saldos zerados.": "History and Balances reset.",
+                "Ajuda-nos a tornar o MiqueyasFinance ainda mais exclusivo. Envia as tuas sugestões ou ideias diretamente para a nossa equipa.": "Help us make MiqueyasFinance even more exclusive. Send your suggestions or ideas directly to our team.",
+                "Escreve a tua sugestão aqui...": "Write your suggestion here...",
+                "Nome da carteira/conta (Ex: Nubank, Cofre):": "Wallet/account name (Ex: Bank, Safe):",
+                "Saldo inicial (opcional):": "Initial balance (optional):",
+                "Nome da categoria:": "Category name:",
+                "Qual o nome do teu sonho/meta? (Ex: Viagem, Carro Novo):": "What's the name of your dream/goal? (Ex: Travel, New Car):",
+                "Qual o valor alvo a alcançar? (Ex: 5000):": "What's the target amount to reach? (Ex: 5000):",
+                "O teu nome": "Your name", "Por favor, digite o seu nome": "Please, enter your name", "Olá": "Hello",
+                "O teu saldo atual de hoje é": "Your current balance today is", "Atual:": "Current:", "Ex: Banco Central": "Ex: Central Bank", "Ex: Investimentos": "Ex: Investments",
+                "Parabéns! Registaste <strong>{inc}</strong> em receitas totais. Descontando as tuas despesas de <strong>{exp}</strong>, o teu lucro líquido (saldo positivo) no período é de <span class='font-bold text-green-500'>{diff}</span>.": "Congratulations! You recorded <strong>{inc}</strong> in total revenue. Deducting your expenses of <strong>{exp}</strong>, your net profit (positive balance) in the period is <span class='font-bold text-green-500'>{diff}</span>.",
+                "As tuas despesas de <strong>{exp}</strong> ultrapassaram as tuas receitas de <strong>{inc}</strong>. O défice atual (prejuízo) é de <span class='font-bold text-rose-500'>{diff}</span>.": "Your expenses of <strong>{exp}</strong> exceeded your revenue of <strong>{inc}</strong>. The current deficit (loss) is <span class='font-bold text-rose-500'>{diff}</span>.",
+                "Gastaste <span class='font-bold text-brand-text'>{spent}</span> em <strong>{name}</strong>, ultrapassando a meta recomendada de {limit}.": "You spent <span class='font-bold text-brand-text'>{spent}</span> on <strong>{name}</strong>, exceeding the recommended target of {limit}.",
+                "Atenção aos gastos com <strong>{name}</strong>. Já consumiste <span class='font-bold text-brand-gold'>{percent}%</span> do valor planeado.": "Pay attention to spending on <strong>{name}</strong>. You have already consumed <span class='font-bold text-brand-gold'>{percent}%</span> of the planned amount.",
+                "A tua maior despesa individual no período foi com <span class='font-bold text-brand-text'>\"{title}\"</span>, custando <span class='font-bold text-rose-500'>{amount}</span>.": "Your largest individual expense in the period was on <span class='font-bold text-brand-text'>\"{title}\"</span>, costing <span class='font-bold text-rose-500'>{amount}</span>.",
+                "Relatório Financeiro Confidencial": "Confidential Financial Report", "Membro:": "Member:", "Período Analisado:": "Analyzed Period:",
+                "Todo o Período Histórico": "All Historical Period", "Data de Emissão:": "Issue Date:", "Total de Entradas": "Total Income",
+                "Total de Saídas": "Total Expenses", "Extrato de Lançamentos": "Transaction Statement", "Data": "Date", "Descrição": "Description",
+                "Tipo": "Type", "Valor (R$)": "Amount (R$)", "Entrada": "Income", "Saída": "Expense", "Nenhum lançamento no período.": "No transactions in the period.",
+                "Documento gerado automaticamente por MiqueyasFinance Premium.": "Document automatically generated by MiqueyasFinance Premium.",
+                "Relatorio_Financeiro_": "Financial_Report_",
+                "Evolução do Património": "Wealth Evolution",
+                "Despesas por Categoria": "Expenses by Category"
+            }
+        };
+
+        window.t = (ptString, params = {}) => {
+            const lang = window.AppState?.settings?.language || 'pt';
+            let str = (lang === 'en' && window.Locales.en[ptString]) ? window.Locales.en[ptString] : ptString;
+            Object.keys(params).forEach(k => { str = str.replace(`{${k}}`, params[k]); });
+            return str;
+        };
+
+        window.updateNavLabels = () => {
+            const el = (id, key) => { const e = document.getElementById(id); if (e) e.innerText = t(key); };
+            el('nav-lbl-dashboard', 'Início'); el('nav-lbl-analysis', 'Análise'); el('nav-lbl-transactions', 'Lançar');
+            el('nav-lbl-goals', 'Metas'); el('nav-lbl-feedback', 'Feedback'); el('nav-lbl-settings', 'Ajustes');
+        };
+
+        // --- ESTADO INICIAL ---
+        const DefaultState = {
+            user: { name: 'Usuário', onboarded: false, hasSeenTutorial: false },
+            categories: [
+                { id: 'c1', name: 'Necessidades', percent: 50 },
+                { id: 'c2', name: 'Poupar', percent: 30 },
+                { id: 'c3', name: 'Lazer', percent: 20 }
+            ],
+            accounts: [
+                { id: 'a1', name: 'Dinheiro', balance: 0 },
+                { id: 'a2', name: 'Conta Corrente', balance: 0 }
+            ],
+            goals: [], 
+            transactions: [],
+            goalTransfers: [], 
+            settings: { darkMode: true, hideBalance: false, language: 'pt' },
+            historyFilters: { type: 'all', account: 'all', category: 'all' },
+            currentFilterMonth: new Date().toISOString().slice(0, 7)
+        };
+
+        window.AppState = JSON.parse(JSON.stringify(DefaultState));
+
+        // --- GESTÃO DE GRÁFICOS (CHART.JS) ---
+        window.ChartManager = {
+            instances: {},
+            renderDashboardChart: () => {
+                const ctx = document.getElementById('dashboard-chart');
+                if (!ctx) return;
+
+                const labels = [];
+                const data = [];
+                const d = new Date();
+                
+                // Gera os últimos 6 meses
+                for (let i = 5; i >= 0; i--) {
+                    const pastMonth = new Date(d.getFullYear(), d.getMonth() - i, 1);
+                    const monthStr = pastMonth.toISOString().slice(0, 7);
+                    const hist = window.Utils.getHistoricalState(monthStr);
+                    
+                    // Formata a label baseada no idioma
+                    const label = pastMonth.toLocaleDateString(window.AppState.settings.language === 'en' ? 'en-US' : 'pt-BR', { month: 'short' }).toUpperCase();
+                    labels.push(label);
+                    data.push(hist.totalBalance);
+                }
+
+                if (window.ChartManager.instances.dashboard) window.ChartManager.instances.dashboard.destroy();
+
+                window.ChartManager.instances.dashboard = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: t('Património Atual'),
+                            data: data,
+                            borderColor: '#d4af37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#141414',
+                            pointBorderColor: '#d4af37',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            fill: true,
+                            tension: 0.4 // Deixa a linha curvada / orgânica
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { color: '#262626', drawBorder: false }, ticks: { color: '#737373', font: { size: 10, weight: 'bold' } } },
+                            y: { 
+                                grid: { color: '#262626', drawBorder: false, borderDash: [5, 5] }, 
+                                ticks: { 
+                                    color: '#737373', 
+                                    font: { size: 10, weight: 'bold' }, 
+                                    callback: (value) => window.AppState.settings.hideBalance ? '•••' : 'R$ ' + value 
+                                } 
+                            }
+                        }
+                    }
+                });
+            },
+            renderAnalysisChart: () => {
+                const ctx = document.getElementById('analysis-chart');
+                if (!ctx) return;
+
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                
+                const labels = [];
+                const data = [];
+                const backgroundColors = ['#d4af37', '#b5952f', '#fbf5b7', '#404040', '#737373', '#262626', '#a3a3a3'];
+
+                window.AppState.categories.forEach((cat) => {
+                    const spent = trans.filter(tObj => tObj.type === 'expense' && tObj.categoryId === cat.id).reduce((a, b) => a + b.amount, 0);
+                    if (spent > 0) {
+                        labels.push(cat.name);
+                        data.push(spent);
+                    }
+                });
+
+                if (data.length === 0) {
+                    ctx.parentElement.innerHTML = `<div class="h-full flex items-center justify-center text-brand-muted text-xs font-bold uppercase tracking-widest">${t('Nenhum lançamento recente')}</div>`;
+                    return;
+                }
+
+                if (window.ChartManager.instances.analysis) window.ChartManager.instances.analysis.destroy();
+
+                window.ChartManager.instances.analysis = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors.slice(0, data.length),
+                            borderColor: '#141414',
+                            borderWidth: 3,
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '75%',
+                        plugins: {
+                            legend: { 
+                                position: 'right', 
+                                labels: { color: '#f3f4f6', font: { size: 11, weight: '600' }, usePointStyle: true, boxWidth: 8, padding: 20 } 
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => {
+                                        let label = context.label || '';
+                                        if (label) label += ': ';
+                                        if (context.parsed !== null) label += window.Utils.formatCurrency(context.parsed);
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        // --- UTILITÁRIOS E INTELIGÊNCIA HISTÓRICA ---
+        window.Utils = {
+            generateId: () => '_' + Math.random().toString(36).substr(2, 9),
+            formatCurrency: (value) => {
+                if (window.AppState.settings.hideBalance) return 'R$ •••••';
+                return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+            },
+            formatDate: (dateStr) => {
+                if(!dateStr) return '';
+                const [year, month, day] = dateStr.split('-');
+                return `${day}/${month}/${year}`;
+            },
+            showToast: (msg, type = 'success') => {
+                const toast = document.getElementById('toast');
+                const iconSvg = document.getElementById('toast-icon-svg');
+                document.getElementById('toast-msg').innerText = msg;
+
+                if (type === 'error') {
+                    toast.className = "fixed top-8 left-1/2 -translate-x-1/2 bg-rose-950 border border-rose-900 text-rose-500 px-6 py-3 rounded-2xl shadow-2xl z-50 transition-all duration-300 transform opacity-0 -translate-y-10 pointer-events-none text-center font-bold text-sm flex items-center gap-2";
+                    iconSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />';
+                } else {
+                    toast.className = "fixed top-8 left-1/2 -translate-x-1/2 bg-brand-card border border-brand-border text-brand-gold px-6 py-3 rounded-2xl shadow-2xl z-50 transition-all duration-300 transform opacity-0 -translate-y-10 pointer-events-none text-center font-bold text-sm flex items-center gap-2";
+                    iconSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />';
+                }
+
+                toast.classList.remove('opacity-0', '-translate-y-10');
+                toast.classList.add('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', '-translate-y-10');
+                }, 3000);
+            },
+            getHistoricalState: (month) => {
+                const currentMonth = new Date().toISOString().slice(0, 7);
+                const isAll = month === 'all';
+                const isHistorical = !isAll && month < currentMonth;
+
+                let accs = JSON.parse(JSON.stringify(window.AppState.accounts));
+                let goals = JSON.parse(JSON.stringify(window.AppState.goals));
+
+                if (isHistorical) {
+                    const endOfMonthStr = month + "-31";
+                    
+                    const futureTrans = window.AppState.transactions.filter(t => t.date > endOfMonthStr);
+                    futureTrans.forEach(t => {
+                        const acc = accs.find(a => a.id === t.accountId);
+                        if (acc) {
+                            if (t.type === 'income') acc.balance -= t.amount;
+                            else if (t.type === 'expense') acc.balance += t.amount;
+                        }
+                    });
+
+                    const futureTransfers = (window.AppState.goalTransfers || []).filter(t => t.date > endOfMonthStr);
+                    futureTransfers.forEach(t => {
+                        const acc = accs.find(a => a.id === t.accountId);
+                        const goal = goals.find(g => g.id === t.goalId);
+                        if (t.isSaving) {
+                            if (acc) acc.balance += t.amount;
+                            if (goal) goal.saved -= t.amount;
+                        } else {
+                            if (acc) acc.balance -= t.amount;
+                            if (goal) goal.saved += t.amount;
+                        }
+                    });
+                }
+
+                const accountsBalance = accs.reduce((a, b) => a + b.balance, 0);
+                const goalsBalance = goals.reduce((a, b) => a + b.saved, 0);
+
+                return {
+                    accounts: accs,
+                    goals: goals,
+                    accountsBalance,
+                    goalsBalance,
+                    totalBalance: accountsBalance + goalsBalance,
+                    isHistorical
+                };
+            },
+            getLogoHTML: (sizeClasses) => {
+                if (LINK_DA_SUA_LOGO.trim() !== "") {
+                    return `<img src="${LINK_DA_SUA_LOGO}" alt="Sua Logo" class="${sizeClasses} object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+                            <div class="${sizeClasses} bg-brand-card border border-brand-border rounded-2xl hidden items-center justify-center shadow-lg">
+                                <span class="text-brand-gold font-bold text-2xl tracking-tighter">MF</span>
+                            </div>`;
+                }
+                const uid = Math.random().toString(36).substring(2, 9);
+                return `
+                    <svg class="${sizeClasses} drop-shadow-[0_0_15px_rgba(212,175,55,0.15)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 5 L88 25 V75 L50 95 L12 75 V25 Z" fill="#141414" stroke="#262626" stroke-width="1.5"/>
+                        <path d="M50 5 L88 25 V75 L50 95 L12 75 V25 Z" fill="none" stroke="url(#goldShield-${uid})" stroke-width="2.5" opacity="0.8"/>
+                        <path d="M28 65 V38 L50 54 L72 38 V65" stroke="url(#goldM-${uid})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M50 16 L54 22 L50 28 L46 22 Z" fill="#fbf5b7" filter="drop-shadow(0 0 4px rgba(251, 245, 183, 0.6))"/>
+                        <defs>
+                            <linearGradient id="goldM-${uid}" x1="28" y1="65" x2="72" y2="38" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#b5952f"/><stop offset="0.5" stop-color="#d4af37"/><stop offset="1" stop-color="#fbf5b7"/>
+                            </linearGradient>
+                            <linearGradient id="goldShield-${uid}" x1="12" y1="5" x2="88" y2="95" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#d4af37"/><stop offset="0.5" stop-color="#141414"/><stop offset="1" stop-color="#b5952f"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                `;
+            },
+            getEyeOpenSVG: () => `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+            getEyeClosedSVG: () => `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>`
+        };
+
+        // --- SISTEMA DE AÇÕES E FIREBASE ---
+        window.Actions = {
+            save: async () => {
+                const stateToSave = JSON.parse(JSON.stringify(window.AppState));
+                if (auth.currentUser) {
+                    try {
+                        const userRef = doc(db, "users", auth.currentUser.uid);
+                        await setDoc(userRef, stateToSave);
+                    } catch (e) {
+                        console.error("Erro ao salvar:", e);
+                    }
+                    localStorage.setItem('financeApp_state_' + auth.currentUser.uid, JSON.stringify(stateToSave));
+                }
+            },
+            changeLanguage: (lang) => {
+                window.AppState.settings.language = lang;
+                window.Actions.save();
+                window.updateNavLabels();
+                const currentPage = document.getElementById('main-content').getAttribute('data-current-page') || 'dashboard';
+                window.router.navigate(currentPage);
+            },
+            addTransaction: (tObj) => {
+                const transaction = { ...tObj, id: Utils.generateId() };
+                window.AppState.transactions.push(transaction);
+                
+                const acc = window.AppState.accounts.find(a => a.id === transaction.accountId);
+                if(acc) {
+                    if(transaction.type === 'income') acc.balance += transaction.amount;
+                    else acc.balance -= transaction.amount;
+                }
+                window.Actions.save();
+            },
+            deleteTransaction: (id) => {
+                const tObj = window.AppState.transactions.find(x => x.id === id);
+                if (!tObj) return;
+                const acc = window.AppState.accounts.find(a => a.id === tObj.accountId);
+                if (acc) {
+                    if (tObj.type === 'income') acc.balance -= tObj.amount;
+                    else acc.balance += tObj.amount;
+                }
+                window.AppState.transactions = window.AppState.transactions.filter(x => x.id !== id);
+                window.Actions.save();
+                Utils.showToast(t("Lançamento apagado."));
+                window.router.navigate('history');
+            },
+            clearAllTransactions: () => {
+                window.AppState.transactions = [];
+                window.AppState.goalTransfers = []; 
+                window.AppState.accounts.forEach(a => a.balance = 0);
+                window.AppState.goals.forEach(g => g.saved = 0); 
+                window.Actions.save();
+                Utils.showToast(t("Histórico e Saldos zerados."));
+                document.getElementById('danger-zone-confirm').classList.add('hidden');
+                window.router.navigate('settings');
+            },
+            toggleHideBalance: () => {
+                window.AppState.settings.hideBalance = !window.AppState.settings.hideBalance;
+                window.Actions.save();
+                window.router.navigate(document.getElementById('main-content').getAttribute('data-current-page') || 'dashboard');
+            },
+            updateHistoryFilter: (key, value) => {
+                window.AppState.historyFilters[key] = value;
+                window.Actions.save();
+                window.router.navigate('history');
+            },
+            logout: async () => {
+                await signOut(auth);
+                window.AppState = JSON.parse(JSON.stringify(DefaultState));
+                window.router.navigate('login');
+            },
+            login: async (email, pass) => {
+                const btn = document.getElementById('btn-login');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = t('Aguarde...');
+                btn.disabled = true;
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                } catch (e) {
+                    Utils.showToast(t("Credenciais inválidas."), "error");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            },
+            updateUserName: (name) => {
+                if(!name) return;
+                window.AppState.user.name = name;
+                window.Actions.save();
+                Utils.showToast(t("Perfil atualizado!"));
+            },
+            addAccount: (name, balance = 0) => {
+                const id = Utils.generateId();
+                window.AppState.accounts.push({ id, name, balance: parseFloat(balance) });
+                window.Actions.save();
+            },
+            deleteAccount: (id) => {
+                if(window.AppState.accounts.length <= 1) {
+                    Utils.showToast(t("É necessário pelo menos 1 conta."), "error");
+                    return;
+                }
+                window.AppState.accounts = window.AppState.accounts.filter(a => a.id !== id);
+                window.AppState.transactions = window.AppState.transactions.filter(tObj => tObj.accountId !== id);
+                window.Actions.save();
+            },
+            addCategory: (name, percent = 0) => {
+                const id = Utils.generateId();
+                window.AppState.categories.push({ id, name, percent: parseInt(percent) });
+                window.Actions.save();
+            },
+            deleteCategory: (id) => {
+                if(window.AppState.categories.length <= 1) {
+                    Utils.showToast(t("É necessário pelo menos 1 categoria."), "error");
+                    return;
+                }
+                window.AppState.categories = window.AppState.categories.filter(c => c.id !== id);
+                window.AppState.transactions = window.AppState.transactions.filter(tObj => tObj.categoryId !== id);
+                window.Actions.save();
+            },
+            sendFeedback: async (e) => {
+                e.preventDefault();
+                const text = document.getElementById('feedback-text').value;
+                if (!text.trim()) return Utils.showToast(t('Escreve algo primeiro.'), 'error');
+                
+                const btn = document.getElementById('btn-send-feedback');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-brand-black"></div>';
+                btn.disabled = true;
+
+                try {
+                    const feedbackRef = collection(db, "feedbacks");
+                    await addDoc(feedbackRef, {
+                        uid: auth.currentUser.uid,
+                        name: window.AppState.user.name,
+                        email: auth.currentUser?.email || "Email não fornecido",
+                        message: text,
+                        date: new Date().toISOString()
+                    });
+                    
+                    Utils.showToast(t("Feedback enviado com sucesso!"));
+                    document.getElementById('feedback-text').value = '';
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                } catch (error) {
+                    console.error("Erro ao enviar feedback:", error);
+                    Utils.showToast(t("Erro ao enviar. Tenta novamente."), "error");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            },
+            finishOnb: () => {
+                window.AppState.user.onboarded = true;
+                window.Actions.save();
+                window.router.navigate('dashboard');
+            },
+            
+            // --- CAIXINHAS (METAS) ---
+            addGoal: (name, target) => {
+                const id = Utils.generateId();
+                window.AppState.goals.push({ id, name, target: parseFloat(target), saved: 0 });
+                window.Actions.save();
+            },
+            deleteGoal: (id) => {
+                const g = window.AppState.goals.find(x => x.id === id);
+                if (g && g.saved > 0) {
+                    Utils.showToast(t("Resgata o dinheiro da caixinha antes de a excluíres."), "error");
+                    return;
+                }
+                window.AppState.goals = window.AppState.goals.filter(c => c.id !== id);
+                window.Actions.save();
+                window.closeCaixinhaModal();
+                window.router.navigate('goals');
+            },
+            transferGoalMoney: (goalId, accountId, amount, isSaving) => {
+                const acc = window.AppState.accounts.find(a => a.id === accountId);
+                const goal = window.AppState.goals.find(g => g.id === goalId);
+                const val = parseFloat(amount);
+                
+                if (!val || val <= 0) return Utils.showToast(t("Valor inválido."), "error");
+
+                if (isSaving) {
+                    if (acc.balance < val) return Utils.showToast(t("Saldo insuficiente na carteira escolhida."), "error");
+                    acc.balance -= val;
+                    goal.saved += val;
+                } else {
+                    if (goal.saved < val) return Utils.showToast(t("Valor indisponível na caixinha."), "error");
+                    acc.balance += val;
+                    goal.saved -= val;
+                }
+                
+                if (!window.AppState.goalTransfers) window.AppState.goalTransfers = [];
+                window.AppState.goalTransfers.push({
+                    id: Utils.generateId(),
+                    goalId: goalId,
+                    accountId: accountId,
+                    amount: val,
+                    isSaving: isSaving,
+                    date: new Date().toISOString().split('T')[0]
+                });
+                
+                window.Actions.save();
+                window.closeCaixinhaModal();
+                window.router.navigate('goals');
+                Utils.showToast(isSaving ? t("Dinheiro Guardado com Sucesso!") : t("Dinheiro Resgatado com Sucesso!"));
+            },
+
+            // --- EXPORTAR PDF VIP ---
+            exportPDF: () => {
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                trans.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+                const inc = trans.filter(tObj => tObj.type === 'income').reduce((a, b) => a + b.amount, 0);
+                const exp = trans.filter(tObj => tObj.type === 'expense').reduce((a, b) => a + b.amount, 0);
+                
+                const htmlContent = `
+                    <div style="font-family: 'Inter', sans-serif; color: #0a0a0a; padding: 40px; background: #ffffff; width: 100%; max-width: 800px; margin: 0 auto;">
+                        <div style="text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 20px; margin-bottom: 30px;">
+                            <h1 style="color: #b5952f; font-size: 28px; margin: 0; text-transform: uppercase; letter-spacing: 2px;">MiqueyasFinance Premium</h1>
+                            <p style="color: #737373; font-size: 14px; margin-top: 5px;">${t('Relatório Financeiro Confidencial')}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 30px; padding: 20px; background: #fafafa; border: 1px solid #e5e5e5; border-radius: 8px;">
+                            <p><strong>${t('Membro:')}</strong> ${window.AppState.user.name}</p>
+                            <p><strong>${t('Período Analisado:')}</strong> ${isAll ? t('Todo o Período Histórico') : month}</p>
+                            <p><strong>${t('Data de Emissão:')}</strong> ${new Date().toLocaleDateString(window.AppState.settings.language === 'en' ? 'en-US' : 'pt-BR')}</p>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+                            <div style="width: 48%; padding: 20px; background: #fbf5b7; border-radius: 8px; border: 1px solid #d4af37;">
+                                <h3 style="margin: 0 0 10px 0; color: #b5952f; font-size: 14px; text-transform: uppercase;">${t('Total de Entradas')}</h3>
+                                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #0a0a0a;">R$ ${inc.toFixed(2)}</p>
+                            </div>
+                            <div style="width: 48%; padding: 20px; background: #fff5f5; border-radius: 8px; border: 1px solid #fecdd3;">
+                                <h3 style="margin: 0 0 10px 0; color: #e11d48; font-size: 14px; text-transform: uppercase;">${t('Total de Saídas')}</h3>
+                                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #0a0a0a;">R$ ${exp.toFixed(2)}</p>
+                            </div>
+                        </div>
+
+                        <h3 style="font-size: 16px; border-bottom: 1px solid #e5e5e5; padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase; color: #b5952f;">${t('Extrato de Lançamentos')}</h3>
+                        
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <thead>
+                                <tr style="background: #141414; color: #d4af37;">
+                                    <th style="padding: 12px; text-align: left;">${t('Data')}</th>
+                                    <th style="padding: 12px; text-align: left;">${t('Descrição')}</th>
+                                    <th style="padding: 12px; text-align: left;">${t('Tipo')}</th>
+                                    <th style="padding: 12px; text-align: right;">${t('Valor (R$)')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${trans.map(tObj => `
+                                    <tr style="border-bottom: 1px solid #e5e5e5;">
+                                        <td style="padding: 12px; color: #737373;">${Utils.formatDate(tObj.date)}</td>
+                                        <td style="padding: 12px; font-weight: bold;">${tObj.title}</td>
+                                        <td style="padding: 12px; color: ${tObj.type === 'income' ? '#b5952f' : '#e11d48'}">${tObj.type === 'income' ? t('Entrada') : t('Saída')}</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: bold;">${tObj.amount.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                                ${trans.length === 0 ? `<tr><td colspan="4" style="text-align:center; padding: 20px;">${t('Nenhum lançamento no período.')}</td></tr>` : ''}
+                            </tbody>
+                        </table>
+                        
+                        <div style="margin-top: 50px; text-align: center; color: #737373; font-size: 10px;">
+                            <p>${t('Documento gerado automaticamente por MiqueyasFinance Premium.')}</p>
+                        </div>
+                    </div>
+                `;
+
+                const container = document.getElementById('pdf-container');
+                container.innerHTML = htmlContent;
+                
+                Utils.showToast(t("A gerar PDF, aguarde..."));
+                
+                html2pdf().set({
+                    margin: [10, 10, 10, 10],
+                    filename: `${t('Relatorio_Financeiro_')}${isAll ? t('Global') : month}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                }).from(container.firstElementChild).save().then(() => {
+                    Utils.showToast(t("PDF VIP baixado com sucesso!"));
+                    container.innerHTML = '';
+                });
+            }
+        };
+
+        const mergeState = (loadedState) => {
+            window.AppState = { ...DefaultState, ...loadedState };
+            if(!window.AppState.goals) window.AppState.goals = []; 
+            if(!window.AppState.goalTransfers) window.AppState.goalTransfers = []; 
+            window.AppState.settings = { ...DefaultState.settings, ...(loadedState.settings || {}) };
+            window.AppState.settings.darkMode = true;
+            if(!window.AppState.settings.language) window.AppState.settings.language = 'pt';
+            window.AppState.historyFilters = { ...DefaultState.historyFilters, ...(loadedState.historyFilters || {}) };
+        };
+
+        // --- TELAS / VIEWS ---
+        window.Views = {
+            login: () => `
+                <div class="fade-in flex flex-col items-center justify-center flex-1 h-full max-w-sm mx-auto w-full">
+                    <div class="mb-8 flex items-center justify-center">
+                        ${Utils.getLogoHTML('w-28 h-28')}
+                    </div>
+                    <h1 class="text-3xl font-black mb-3 tracking-tight text-brand-text">MiqueyasFinance</h1>
+                    <p class="text-brand-muted mb-10 font-medium text-center text-sm uppercase tracking-widest">${t('Acesso Exclusivo')}</p>
+                    <form id="loginForm" class="w-full space-y-4">
+                        <input type="email" id="email" placeholder="${t('E-mail de Membro')}" required class="w-full bg-brand-card border border-brand-border p-4 rounded-xl outline-none focus:border-brand-gold transition text-brand-text text-center">
+                        <input type="password" id="password" placeholder="${t('Senha')}" required class="w-full bg-brand-card border border-brand-border p-4 rounded-xl outline-none focus:border-brand-gold transition text-brand-text text-center">
+                        <button type="submit" id="btn-login" class="w-full py-4 bg-brand-gold text-brand-black font-bold rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-brand-goldDark active:scale-95 transition-all mt-6 uppercase tracking-widest">${t('Acessar Conta')}</button>
+                    </form>
+                </div>
+            `,
+            dashboard: () => {
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                const recentTrans = [...trans].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+                    
+                const income = trans.filter(tObj => tObj.type === 'income').reduce((a, b) => a + b.amount, 0);
+                const expense = trans.filter(tObj => tObj.type === 'expense').reduce((a, b) => a + b.amount, 0);
+                
+                const hist = Utils.getHistoricalState(month);
+                const currentTotal = window.AppState.accounts.reduce((a,b)=>a+b.balance,0) + window.AppState.goals.reduce((a,b)=>a+b.saved,0);
+
+                return `
+                    <div class="fade-in max-w-6xl mx-auto w-full">
+                        <header class="flex justify-between items-center mb-10">
+                            <div class="flex items-center gap-4">
+                                <div class="md:hidden">${Utils.getLogoHTML('w-12 h-12')}</div>
+                                <div>
+                                    <h1 class="text-2xl md:text-3xl font-bold leading-none text-brand-text tracking-tight">${t('Olá')}, ${window.AppState.user.name.split(' ')[0]}</h1>
+                                    <p class="text-[10px] md:text-xs font-semibold text-brand-gold uppercase tracking-widest mt-1">${t('Membro Premium')}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="Actions.toggleHideBalance()" class="text-brand-muted hover:text-brand-gold transition bg-brand-card p-3 rounded-xl border border-brand-border shadow-md">
+                                    ${window.AppState.settings.hideBalance ? Utils.getEyeClosedSVG() : Utils.getEyeOpenSVG()}
+                                </button>
+                            </div>
+                        </header>
+                        
+                        <div class="lg:grid lg:grid-cols-12 lg:gap-10 items-start">
+                            <div class="lg:col-span-8">
+                                <div class="bg-gradient-to-br from-brand-card to-brand-black border border-brand-border rounded-[24px] p-8 md:p-10 shadow-2xl mb-10 relative overflow-hidden group">
+                                    <div class="absolute top-0 right-0 w-48 h-48 bg-brand-gold opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-opacity duration-700"></div>
+                                    <div class="relative z-10 flex flex-col md:flex-row justify-between md:items-end gap-6">
+                                        <div>
+                                            <p class="text-brand-muted text-xs font-bold mb-2 uppercase tracking-widest flex items-center gap-2">
+                                                ${hist.isHistorical ? t('Património no Fim do Mês') : t('Património Atual')} 
+                                                <span class="text-[9px] bg-brand-border text-brand-muted px-2 py-0.5 rounded-md">${t('Contas + Caixinhas')}</span>
+                                            </p>
+                                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-gradient-gold">${Utils.formatCurrency(hist.totalBalance)}</h2>
+                                            ${hist.isHistorical ? `<p class="text-brand-muted text-[10px] mt-2 font-bold uppercase tracking-widest">${t('O teu saldo atual de hoje é')} <span class="text-brand-gold">${Utils.formatCurrency(currentTotal)}</span></p>` : ''}
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex bg-brand-black/50 border border-brand-border/50 p-1 rounded-xl backdrop-blur-sm shadow-inner w-full md:w-auto">
+                                                <button onclick="AppState.currentFilterMonth='all'; window.router.navigate('dashboard')" class="flex-1 px-4 py-1.5 rounded-lg text-[10px] font-bold transition ${isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Global')}</button>
+                                                <button onclick="AppState.currentFilterMonth='${new Date().toISOString().slice(0, 7)}'; window.router.navigate('dashboard')" class="flex-1 px-4 py-1.5 rounded-lg text-[10px] font-bold transition ${!isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Mensal')}</button>
+                                            </div>
+                                            ${!isAll ? `
+                                                <input type="month" value="${month}" onchange="AppState.currentFilterMonth = this.value; window.router.navigate('dashboard')" class="bg-brand-black/50 border border-brand-border/50 px-4 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer text-brand-gold text-center w-full" style="color-scheme: dark;">
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                    <div class="relative z-10 grid grid-cols-2 gap-4 md:gap-6 mt-10">
+                                        <div class="bg-brand-black/50 border border-brand-border/50 p-5 rounded-2xl backdrop-blur-sm shadow-inner">
+                                            <p class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-brand-gold mb-1.5">${t('Entradas')}</p>
+                                            <p class="font-bold text-base md:text-lg text-brand-text">${Utils.formatCurrency(income)}</p>
+                                        </div>
+                                        <div class="bg-brand-black/50 border border-brand-border/50 p-5 rounded-2xl backdrop-blur-sm shadow-inner">
+                                            <p class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-brand-muted mb-1.5">${t('Saídas')}</p>
+                                            <p class="font-bold text-base md:text-lg text-brand-text">${Utils.formatCurrency(expense)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- NOVO: GRÁFICO DE PATRIMÓNIO -->
+                                <h3 class="font-bold text-brand-text mb-4 text-sm uppercase tracking-widest">${t('Evolução do Património')}</h3>
+                                <div class="bg-brand-card border border-brand-border rounded-[24px] p-4 md:p-6 shadow-md mb-10 h-64 relative">
+                                    <canvas id="dashboard-chart"></canvas>
+                                </div>
+
+                                <h3 class="font-bold text-brand-text mb-4 text-sm uppercase tracking-widest">${t('Saldos nas Carteiras')}</h3>
+                                <div class="flex gap-4 overflow-x-auto pb-4 mb-10 snap-x hide-scrollbar md:flex-wrap md:overflow-visible">
+                                    ${hist.accounts.map(acc => {
+                                        const currentAcc = window.AppState.accounts.find(a => a.id === acc.id);
+                                        return `
+                                        <div class="min-w-[150px] flex-1 md:min-w-[200px] snap-center bg-brand-card p-6 rounded-2xl border border-brand-border shadow-md flex flex-col justify-between h-32 relative overflow-hidden transition hover:border-brand-gold/50">
+                                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-brand-border rounded-full opacity-30"></div>
+                                            <span class="text-xs font-bold text-brand-muted truncate relative z-10 uppercase tracking-wider">${acc.name}</span>
+                                            <div>
+                                                <span class="font-bold text-lg text-brand-text tracking-tight relative z-10 block">${Utils.formatCurrency(acc.balance)}</span>
+                                                ${hist.isHistorical && acc.balance !== currentAcc.balance ? `<span class="text-[9px] font-bold text-brand-muted uppercase tracking-widest relative z-10 block mt-1">${t('Atual:')} ${Utils.formatCurrency(currentAcc.balance)}</span>` : ''}
+                                            </div>
+                                        </div>
+                                    `}).join('')}
+                                </div>
+
+                                <div class="flex justify-between items-center mb-5">
+                                    <h3 class="font-bold text-brand-text text-sm uppercase tracking-widest">${t('Últimos Lançamentos')}</h3>
+                                    <button onclick="window.router.navigate('history')" class="text-[10px] font-bold text-brand-gold uppercase tracking-widest hover:text-brand-goldDark transition bg-brand-card px-4 py-2 rounded-lg border border-brand-border shadow-sm">${t('Ver Tudo &rarr;')}</button>
+                                </div>
+                                <div class="space-y-3 mb-10 lg:mb-0">
+                                    ${recentTrans.length === 0 ? `
+                                        <div class="text-center py-10 bg-brand-card rounded-2xl border border-brand-border shadow-inner">
+                                            <p class="text-brand-muted font-bold text-xs uppercase tracking-widest">${t('Nenhum lançamento recente')}</p>
+                                        </div>
+                                    ` : ''}
+                                    ${recentTrans.map(tObj => {
+                                        const acc = window.AppState.accounts.find(a => a.id === tObj.accountId);
+                                        return `
+                                        <div class="bg-brand-card p-5 rounded-2xl flex items-center gap-5 border border-brand-border shadow-sm hover:border-brand-border/80 transition">
+                                            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl ${tObj.type === 'income' ? 'bg-brand-gold/20 text-brand-gold' : 'bg-brand-border text-brand-muted'}">
+                                                ${tObj.type === 'income' ? '+' : '-'}
+                                            </div>
+                                            <div class="flex-1 overflow-hidden">
+                                                <p class="font-semibold text-sm md:text-base text-brand-text truncate">${tObj.title}</p>
+                                                <p class="text-[10px] md:text-xs font-bold text-brand-muted uppercase tracking-wider truncate flex gap-1 mt-1">
+                                                    <span>${Utils.formatDate(tObj.date)}</span> &bull; <span>${acc ? acc.name : '?'}</span>
+                                                </p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="font-bold text-base md:text-lg ${tObj.type === 'income' ? 'text-brand-gold' : 'text-brand-text'}">${tObj.type === 'expense' ? '-' : ''}${Utils.formatCurrency(tObj.amount)}</p>
+                                            </div>
+                                        </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-4 bg-brand-card p-6 md:p-8 rounded-[24px] border border-brand-border shadow-xl h-fit">
+                                <h3 class="font-bold text-brand-text mb-6 text-sm uppercase tracking-widest text-center border-b border-brand-border pb-4">${t('Regra de Ouro (Orçamento)')}</h3>
+                                <div class="space-y-6">
+                                    ${window.AppState.categories.map(cat => {
+                                        const spent = trans.filter(tObj => tObj.type === 'expense' && tObj.categoryId === cat.id).reduce((a, b) => a + b.amount, 0);
+                                        const limit = (income * cat.percent) / 100;
+                                        const p = limit > 0 ? (spent / limit) * 100 : 0;
+                                        return `
+                                            <div class="relative">
+                                                <div class="flex justify-between items-end mb-3">
+                                                    <div>
+                                                        <span class="font-bold text-sm block text-brand-text">${cat.name}</span>
+                                                        <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider mt-1 block">${t('Meta:')} ${cat.percent}%</span>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <span class="font-bold text-sm block text-brand-text">${Utils.formatCurrency(spent)}</span>
+                                                        <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider mt-1 block">${t('Limite:')} ${Utils.formatCurrency(limit)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full bg-brand-black h-2 rounded-full overflow-hidden border border-brand-border/50 shadow-inner">
+                                                    <div class="bg-brand-gold h-full rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(212,175,55,0.6)]" style="width: ${Math.min(p, 100)}%"></div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            analysis: () => {
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                
+                const inc = trans.filter(tObj => tObj.type === 'income').reduce((a, b) => a + b.amount, 0);
+                const exp = trans.filter(tObj => tObj.type === 'expense').reduce((a, b) => a + b.amount, 0);
+                const diff = inc - exp;
+
+                let cards = '';
+
+                if (inc > 0 && diff > 0) {
+                    cards += `
+                        <div class="bg-brand-black p-6 rounded-2xl border border-green-900/50 shadow-[0_0_15px_rgba(34,197,94,0.1)] flex items-start gap-4 mb-4 slide-in-right">
+                            <div class="p-3 bg-green-900/20 text-green-500 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>
+                            <div>
+                                <h4 class="font-bold text-brand-text mb-2 uppercase tracking-widest text-xs">${t('Crescimento Positivo')}</h4>
+                                <p class="text-sm text-brand-muted leading-relaxed">${t("Parabéns! Registaste <strong>{inc}</strong> em receitas totais. Descontando as tuas despesas de <strong>{exp}</strong>, o teu lucro líquido (saldo positivo) no período é de <span class='font-bold text-green-500'>{diff}</span>.", {inc: Utils.formatCurrency(inc), exp: Utils.formatCurrency(exp), diff: Utils.formatCurrency(diff)})}</p>
+                            </div>
+                        </div>`;
+                } else if (exp > inc && inc > 0) {
+                    cards += `
+                        <div class="bg-brand-black p-6 rounded-2xl border border-rose-900/50 shadow-[0_0_15px_rgba(225,29,72,0.1)] flex items-start gap-4 mb-4 slide-in-right" style="animation-delay: 0.1s">
+                            <div class="p-3 bg-rose-900/20 text-rose-500 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div>
+                            <div>
+                                <h4 class="font-bold text-brand-text mb-2 uppercase tracking-widest text-xs">${t('Atenção Patrimonial')}</h4>
+                                <p class="text-sm text-brand-muted leading-relaxed">${t("As tuas despesas de <strong>{exp}</strong> ultrapassaram as tuas receitas de <strong>{inc}</strong>. O défice atual (prejuízo) é de <span class='font-bold text-rose-500'>{diff}</span>.", {exp: Utils.formatCurrency(exp), inc: Utils.formatCurrency(inc), diff: Utils.formatCurrency(exp - inc)})}</p>
+                            </div>
+                        </div>`;
+                } else if (inc === 0 && exp === 0) {
+                    cards += `<div class="bg-brand-black p-6 rounded-2xl border border-brand-border text-center"><p class="text-brand-muted text-sm font-bold uppercase tracking-widest">${t('Aguardando lançamentos para análise.')}</p></div>`;
+                }
+
+                window.AppState.categories.forEach((cat, idx) => {
+                    const spent = trans.filter(tObj => tObj.type === 'expense' && tObj.categoryId === cat.id).reduce((a,b)=>a+b.amount,0);
+                    const limit = (inc * cat.percent) / 100;
+                    if (limit > 0 && spent > limit) {
+                        cards += `
+                            <div class="bg-brand-black p-6 rounded-2xl border border-brand-border flex items-start gap-4 mb-4 slide-in-right" style="animation-delay: ${0.2 + (idx*0.05)}s">
+                                <div class="p-3 bg-brand-card text-rose-500 rounded-xl border border-rose-900/30"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+                                <div>
+                                    <h4 class="font-bold text-brand-text mb-1 uppercase tracking-widest text-xs">${t('Orçamento Estourado')}</h4>
+                                    <p class="text-sm text-brand-muted leading-relaxed">${t("Gastaste <span class='font-bold text-brand-text'>{spent}</span> em <strong>{name}</strong>, ultrapassando a meta recomendada de {limit}.", {spent: Utils.formatCurrency(spent), name: cat.name, limit: Utils.formatCurrency(limit)})}</p>
+                                </div>
+                            </div>`;
+                    } else if (limit > 0 && spent > (limit * 0.8)) {
+                        cards += `
+                            <div class="bg-brand-black p-6 rounded-2xl border border-brand-border flex items-start gap-4 mb-4 slide-in-right" style="animation-delay: ${0.2 + (idx*0.05)}s">
+                                <div class="p-3 bg-brand-card text-brand-gold rounded-xl border border-brand-gold/20"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                                <div>
+                                    <h4 class="font-bold text-brand-text mb-1 uppercase tracking-widest text-xs">${t('Limite Próximo')}</h4>
+                                    <p class="text-sm text-brand-muted leading-relaxed">${t("Atenção aos gastos com <strong>{name}</strong>. Já consumiste <span class='font-bold text-brand-gold'>{percent}%</span> do valor planeado.", {name: cat.name, percent: ((spent/limit)*100).toFixed(0)})}</p>
+                                </div>
+                            </div>`;
+                    }
+                });
+
+                const exps = trans.filter(tObj => tObj.type === 'expense').sort((a,b)=>b.amount - a.amount);
+                if (exps.length > 0) {
+                    cards += `
+                        <div class="bg-brand-black p-6 rounded-2xl border border-brand-border flex items-start gap-4 mb-4 slide-in-right" style="animation-delay: 0.4s">
+                            <div class="p-3 bg-brand-card text-brand-text rounded-xl border border-brand-border"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+                            <div>
+                                <h4 class="font-bold text-brand-text mb-1 uppercase tracking-widest text-xs">${t('Raio-X de Gastos')}</h4>
+                                <p class="text-sm text-brand-muted leading-relaxed">${t("A tua maior despesa individual no período foi com <span class='font-bold text-brand-text'>\"{title}\"</span>, custando <span class='font-bold text-rose-500'>{amount}</span>.", {title: exps[0].title, amount: Utils.formatCurrency(exps[0].amount)})}</p>
+                            </div>
+                        </div>`;
+                }
+
+                return `
+                    <div class="fade-in max-w-4xl mx-auto w-full pt-4 md:pt-10 pb-12">
+                        <header class="mb-10 text-center">
+                            <div class="inline-flex p-4 bg-brand-card rounded-full border border-brand-gold pulse-gold mb-6 text-brand-gold">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                            </div>
+                            <h2 class="text-3xl font-black text-brand-text uppercase tracking-widest">${t('Inteligência Financeira')}</h2>
+                            <p class="text-brand-muted text-sm font-medium mt-3">${t('Análise automatizada baseada no teu comportamento.')}</p>
+                        </header>
+                        
+                        <div class="flex justify-center mb-10">
+                            <div class="flex bg-brand-card p-1.5 rounded-xl border border-brand-border">
+                                <button onclick="AppState.currentFilterMonth='all'; window.router.navigate('analysis')" class="px-6 py-2 rounded-lg text-xs font-bold transition ${isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Global')}</button>
+                                <button onclick="AppState.currentFilterMonth='${new Date().toISOString().slice(0, 7)}'; window.router.navigate('analysis')" class="px-6 py-2 rounded-lg text-xs font-bold transition ${!isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Mensal')}</button>
+                            </div>
+                        </div>
+
+                        <!-- NOVO: GRÁFICO CIRCULAR DE DESPESAS -->
+                        <div class="bg-brand-card p-6 md:p-8 rounded-3xl border border-brand-border shadow-2xl mb-10 slide-up">
+                            <h3 class="font-bold text-brand-text mb-6 text-sm uppercase tracking-widest text-center">${t('Despesas por Categoria')}</h3>
+                            <div class="h-64 relative w-full flex justify-center">
+                                <canvas id="analysis-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-brand-card p-6 md:p-10 rounded-3xl border border-brand-border shadow-2xl">
+                            ${cards}
+                        </div>
+                    </div>
+                `;
+            },
+            
+            goals: () => {
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const hist = Utils.getHistoricalState(month);
+                const goals = hist.goals || [];
+                const goalsBalance = hist.goalsBalance;
+
+                return `
+                    <div class="fade-in max-w-4xl mx-auto w-full pt-4 md:pt-10 pb-12">
+                        <div class="text-center mb-10">
+                            <h2 class="text-3xl md:text-4xl font-black text-brand-text tracking-tighter mb-4 text-gradient-gold">${t('Caixinhas VIP')}</h2>
+                            <p class="text-brand-muted text-sm md:text-base font-medium">${t('Guarda dinheiro de forma direcionada. O saldo aqui continua a contar no teu património total.')}</p>
+                        </div>
+                        
+                        <div class="flex justify-center mb-8">
+                            <div class="flex bg-brand-card p-1.5 rounded-xl border border-brand-border">
+                                <button onclick="AppState.currentFilterMonth='all'; window.router.navigate('goals')" class="px-6 py-2 rounded-lg text-xs font-bold transition ${isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Global')}</button>
+                                <button onclick="AppState.currentFilterMonth='${new Date().toISOString().slice(0, 7)}'; window.router.navigate('goals')" class="px-6 py-2 rounded-lg text-xs font-bold transition ${!isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Mensal')}</button>
+                            </div>
+                        </div>
+                        ${!isAll ? `
+                            <div class="flex justify-center mb-8">
+                                <input type="month" value="${month}" onchange="AppState.currentFilterMonth = this.value; window.router.navigate('goals')" class="bg-brand-black border border-brand-border px-4 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer text-brand-gold text-center" style="color-scheme: dark;">
+                            </div>
+                        ` : ''}
+
+                        <div class="bg-brand-black border border-brand-border p-5 rounded-2xl mb-8 flex justify-between items-center max-w-md mx-auto">
+                            <span class="text-xs font-bold text-brand-muted uppercase tracking-widest">${t('Total nas Caixinhas')}</span>
+                            <div class="text-right">
+                                <span class="text-xl font-black text-brand-gold block">${Utils.formatCurrency(goalsBalance)}</span>
+                                ${hist.isHistorical ? `<span class="text-[9px] font-bold text-brand-muted uppercase tracking-widest block mt-1">${t('Atual:')} ${Utils.formatCurrency(window.AppState.goals.reduce((a,b)=>a+b.saved,0))}</span>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                            ${goals.map(g => {
+                                const currentGoal = window.AppState.goals.find(cg => cg.id === g.id);
+                                const p = g.target > 0 ? (g.saved / g.target) * 100 : 0;
+                                return `
+                                <div class="bg-brand-card p-6 rounded-3xl border border-brand-border shadow-lg relative overflow-hidden group hover:border-brand-gold/50 transition">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div>
+                                            <h3 class="font-black text-lg text-brand-text uppercase tracking-wider">${g.name}</h3>
+                                            <p class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mt-1">${t('Meta:')} ${Utils.formatCurrency(g.target)}</p>
+                                        </div>
+                                        <button onclick="window.Actions.deleteGoal('${g.id}')" class="text-brand-border hover:text-rose-500 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                                    </div>
+                                    <div class="mb-6">
+                                        <p class="font-bold text-3xl text-brand-gold mb-1">${Utils.formatCurrency(g.saved)}</p>
+                                        ${hist.isHistorical && g.saved !== currentGoal.saved ? `<p class="text-[9px] font-bold text-brand-muted uppercase tracking-widest mb-2">${t('Atual:')} ${Utils.formatCurrency(currentGoal.saved)}</p>` : ''}
+                                        <div class="w-full bg-brand-black h-2 rounded-full overflow-hidden border border-brand-border ${hist.isHistorical && g.saved !== currentGoal.saved ? 'mt-2' : ''}">
+                                            <div class="bg-brand-gold h-full rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(212,175,55,0.6)]" style="width: ${Math.min(p, 100)}%"></div>
+                                        </div>
+                                        <p class="text-[10px] text-right text-brand-muted font-bold mt-2">${p.toFixed(1)}% ${t('concluído')}</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <button onclick="window.openCaixinhaModal('${g.id}', true)" class="flex-1 bg-brand-gold text-brand-black font-bold py-3 rounded-xl text-xs uppercase tracking-widest hover:bg-brand-goldDark transition shadow-md">${t('Guardar')}</button>
+                                        <button onclick="window.openCaixinhaModal('${g.id}', false)" class="flex-1 bg-brand-black border border-brand-border text-brand-text font-bold py-3 rounded-xl text-xs uppercase tracking-widest hover:bg-brand-border transition">${t('Resgatar')}</button>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('')}
+                            
+                            <div onclick="window.promptNewGoal()" class="bg-brand-black border-2 border-dashed border-brand-border rounded-3xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-brand-gold hover:bg-brand-card/30 transition min-h-[250px] group">
+                                <div class="w-14 h-14 bg-brand-card rounded-full flex items-center justify-center text-brand-muted mb-4 group-hover:text-brand-gold group-hover:scale-110 transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg></div>
+                                <p class="font-bold text-sm text-brand-muted uppercase tracking-widest group-hover:text-brand-text">${t('Nova Caixinha')}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            history: () => {
+                const f = window.AppState.historyFilters;
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                
+                let trans = isAll ? [...window.AppState.transactions] : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                
+                if (f.type !== 'all') trans = trans.filter(tObj => tObj.type === f.type);
+                if (f.account !== 'all') trans = trans.filter(tObj => tObj.accountId === f.account);
+                if (f.category !== 'all') trans = trans.filter(tObj => tObj.categoryId === f.category);
+                
+                trans.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+                return `
+                    <div class="fade-in flex flex-col h-full max-w-6xl mx-auto w-full">
+                        <div class="flex justify-between items-center mb-8">
+                            <h2 class="text-2xl font-bold text-brand-text tracking-tight uppercase tracking-widest">${t('Histórico')}</h2>
+                            <button onclick="window.Actions.exportPDF()" class="text-[10px] font-bold text-brand-black bg-brand-gold uppercase tracking-widest hover:bg-brand-goldDark transition px-4 py-2.5 rounded-xl shadow-[0_0_10px_rgba(212,175,55,0.3)] flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                ${t('Baixar PDF VIP')}
+                            </button>
+                        </div>
+
+                        <div class="md:flex md:items-center md:justify-between mb-8 space-y-4 md:space-y-0 bg-brand-card p-4 rounded-2xl border border-brand-border">
+                            <div>
+                                <div class="flex bg-brand-black p-1 rounded-xl border border-brand-border mb-3 w-full md:w-auto md:mb-0 md:inline-flex">
+                                    <button onclick="AppState.currentFilterMonth='all'; window.router.navigate('history')" class="flex-1 md:px-6 py-2 rounded-lg text-xs font-bold transition ${isAll ? 'bg-brand-card text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Global')}</button>
+                                    <button onclick="AppState.currentFilterMonth='${new Date().toISOString().slice(0, 7)}'; window.router.navigate('history')" class="flex-1 md:px-6 py-2 rounded-lg text-xs font-bold transition ${!isAll ? 'bg-brand-card text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Mensal')}</button>
+                                </div>
+                                ${!isAll ? `
+                                    <div class="flex items-center justify-between md:inline-flex md:ml-4 bg-brand-black px-4 py-2 rounded-xl border border-brand-border slide-up mt-2 md:mt-0">
+                                        <span class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mr-3">${t('Mês:')}</span>
+                                        <input type="month" value="${month}" onchange="AppState.currentFilterMonth = this.value; window.router.navigate('history')" class="bg-transparent text-sm font-bold outline-none cursor-pointer text-brand-gold" style="color-scheme: dark;">
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="flex gap-2 overflow-x-auto hide-scrollbar md:flex-wrap">
+                                <select onchange="Actions.updateHistoryFilter('type', this.value)" class="bg-brand-black text-xs font-semibold text-brand-muted p-3 rounded-xl border border-brand-border outline-none shadow-sm min-w-[110px] focus:border-brand-gold transition">
+                                    <option value="all" ${f.type==='all'?'selected':''}>${t('Tipos: Todos')}</option>
+                                    <option value="income" ${f.type==='income'?'selected':''}>${t('Entradas')}</option>
+                                    <option value="expense" ${f.type==='expense'?'selected':''}>${t('Saídas')}</option>
+                                </select>
+                                
+                                <select onchange="Actions.updateHistoryFilter('account', this.value)" class="bg-brand-black text-xs font-semibold text-brand-muted p-3 rounded-xl border border-brand-border outline-none shadow-sm min-w-[110px] focus:border-brand-gold transition">
+                                    <option value="all" ${f.account==='all'?'selected':''}>${t('Contas: Todas')}</option>
+                                    ${window.AppState.accounts.map(a => `<option value="${a.id}" ${f.account===a.id?'selected':''}>${a.name}</option>`).join('')}
+                                </select>
+
+                                <select onchange="Actions.updateHistoryFilter('category', this.value)" class="bg-brand-black text-xs font-semibold text-brand-muted p-3 rounded-xl border border-brand-border outline-none shadow-sm min-w-[120px] focus:border-brand-gold transition">
+                                    <option value="all" ${f.category==='all'?'selected':''}>${t('Categorias: Todas')}</option>
+                                    ${window.AppState.categories.map(c => `<option value="${c.id}" ${f.category===c.id?'selected':''}>${c.name}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 pb-8 flex-1">
+                            ${trans.length === 0 ? `
+                                <div class="text-center py-20 bg-brand-card rounded-2xl border border-brand-border h-full flex flex-col items-center justify-center">
+                                    <div class="w-16 h-16 bg-brand-black border border-brand-border rounded-full flex items-center justify-center mx-auto mb-4 text-brand-muted">
+                                        <svg class="w-8 h-8 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                    </div>
+                                    <p class="text-brand-muted font-bold text-sm uppercase tracking-widest">${t('Nenhuma transação encontrada')}</p>
+                                </div>
+                            ` : ''}
+                            ${trans.map(tObj => {
+                                const acc = window.AppState.accounts.find(a => a.id === tObj.accountId);
+                                const cat = window.AppState.categories.find(c => c.id === tObj.categoryId);
+                                return `
+                                <div class="bg-brand-card p-5 rounded-2xl flex items-center gap-5 border border-brand-border shadow-sm transition hover:border-brand-gold/50">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl ${tObj.type === 'income' ? 'bg-brand-gold/20 text-brand-gold' : 'bg-brand-border text-brand-muted'}">
+                                        ${tObj.type === 'income' ? '+' : '-'}
+                                    </div>
+                                    <div class="flex-1 overflow-hidden">
+                                        <p class="font-semibold text-base text-brand-text truncate">${tObj.title}</p>
+                                        <p class="text-xs font-bold text-brand-muted uppercase tracking-wider truncate flex gap-2 mt-1">
+                                            <span>${Utils.formatDate(tObj.date)}</span> &bull; <span>${acc ? acc.name : '?'}</span>
+                                            ${cat && tObj.type === 'expense' ? `&bull; <span>${cat.name}</span>` : ''}
+                                        </p>
+                                    </div>
+                                    <div class="text-right flex flex-col items-end">
+                                        <p class="font-bold text-lg mb-2 ${tObj.type === 'income' ? 'text-brand-gold' : 'text-brand-text'}">${tObj.type === 'expense' ? '-' : ''}${Utils.formatCurrency(tObj.amount)}</p>
+                                        <button onclick="Actions.deleteTransaction('${tObj.id}')" class="text-brand-muted hover:text-rose-500 transition-colors bg-brand-black p-2 rounded-lg border border-brand-border flex items-center gap-1 text-[10px] font-bold uppercase"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg> ${t('Apagar')}</button>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            },
+
+            transactions: () => `<div class="fade-in max-w-xl mx-auto w-full pt-4 md:pt-10"><h2 class="text-2xl font-black mb-10 text-brand-text uppercase tracking-widest text-center">${t('Novo Lançamento')}</h2><form onsubmit="window.submitTransaction(event)" class="space-y-8 bg-brand-card p-6 md:p-10 rounded-3xl border border-brand-border shadow-2xl"><input type="hidden" id="t-type" value="expense"><div class="flex p-1.5 bg-brand-black rounded-xl border border-brand-border relative"><button type="button" onclick="window.toggleType(true)" id="btn-exp" class="flex-1 py-4 rounded-lg text-sm font-bold bg-brand-border text-brand-text shadow transition-all uppercase tracking-widest">${t('Despesa')}</button><button type="button" onclick="window.toggleType(false)" id="btn-inc" class="flex-1 py-4 rounded-lg text-sm font-bold text-brand-muted hover:text-brand-text transition-all uppercase tracking-widest">${t('Receita')}</button></div><div class="py-6 border-y border-brand-border/50"><p class="text-[10px] font-bold text-brand-gold uppercase text-center mb-4 tracking-widest">${t('Valor da Transação')}</p><input type="number" id="t-amount" step="0.01" placeholder="R$ 0,00" class="w-full bg-transparent text-5xl md:text-6xl font-black text-center outline-none text-brand-text placeholder-brand-border tracking-tighter transition focus:scale-105"></div><div class="space-y-4"><input type="text" id="t-title" placeholder="${t('Descrição do lançamento')}" class="w-full bg-brand-black p-5 rounded-xl outline-none font-semibold text-base text-brand-text border border-brand-border focus:border-brand-gold transition"><input type="date" id="t-date" value="${new Date().toISOString().split('T')[0]}" class="w-full bg-brand-black p-5 rounded-xl outline-none font-semibold text-base text-brand-text border border-brand-border focus:border-brand-gold transition" style="color-scheme: dark;"></div><div><p class="text-[10px] font-bold text-brand-muted uppercase mb-4 ml-1 tracking-wider">${t('Selecione a Carteira')}</p><div class="flex flex-wrap gap-3">${window.AppState.accounts.map((a, i) => `<label class="cursor-pointer"><input type="radio" name="t-acc" value="${a.id}" class="sr-only peer" ${i===0?'checked':''}><div class="px-6 py-4 bg-brand-black border border-brand-border rounded-xl text-xs font-bold peer-checked:bg-brand-gold peer-checked:text-brand-black peer-checked:border-brand-gold text-brand-text transition-all">${a.name}</div></label>`).join('')}</div></div><div id="category-section"><p class="text-[10px] font-bold text-brand-muted uppercase mb-4 ml-1 tracking-wider">${t('Categoria da Despesa')}</p><div class="grid grid-cols-2 md:grid-cols-3 gap-3">${window.AppState.categories.map((c, i) => `<label class="cursor-pointer"><input type="radio" name="t-cat" value="${c.id}" class="sr-only peer" ${i===0?'checked':''}><div class="p-4 bg-brand-black border border-brand-border rounded-xl text-xs font-bold peer-checked:bg-brand-border peer-checked:text-brand-gold text-brand-text transition-all text-center">${c.name}</div></label>`).join('')}</div></div><button type="submit" class="w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 hover:bg-brand-goldDark transition mt-8 text-base tracking-widest uppercase">${t('Confirmar Lançamento')}</button></form></div>`,
+            settings: () => `<div class="fade-in max-w-2xl mx-auto w-full space-y-8 pt-4 md:pt-10 pb-12"><h2 class="text-2xl font-black text-brand-text uppercase tracking-widest text-center mb-10">${t('Ajustes')}</h2><section><p class="text-[10px] font-bold text-brand-gold uppercase tracking-wider mb-4 ml-2">${t('Idioma')}</p><div class="bg-brand-card p-6 rounded-3xl border border-brand-border shadow-lg"><div class="flex gap-3"><button onclick="Actions.changeLanguage('pt')" class="flex-1 py-3 rounded-xl font-bold text-xs transition uppercase tracking-widest ${window.AppState.settings.language === 'pt' ? 'bg-brand-gold text-brand-black shadow-md' : 'bg-brand-black border border-brand-border text-brand-muted hover:text-brand-text'}">Português</button><button onclick="Actions.changeLanguage('en')" class="flex-1 py-3 rounded-xl font-bold text-xs transition uppercase tracking-widest ${window.AppState.settings.language === 'en' ? 'bg-brand-gold text-brand-black shadow-md' : 'bg-brand-black border border-brand-border text-brand-muted hover:text-brand-text'}">English</button></div></div></section><section><p class="text-[10px] font-bold text-brand-gold uppercase mb-4 ml-2 tracking-wider">${t('Perfil do Membro')}</p><div class="bg-brand-card p-6 rounded-3xl border border-brand-border shadow-lg"><div><label class="text-[10px] font-semibold text-brand-muted uppercase block mb-3">${t('Nome de Exibição')}</label><div class="flex gap-3"><input type="text" id="edit-name" value="${window.AppState.user.name}" class="flex-1 bg-brand-black p-4 rounded-xl outline-none font-bold text-base text-brand-text border border-brand-border focus:border-brand-gold transition"><button onclick="Actions.updateUserName(document.getElementById('edit-name').value)" class="bg-brand-gold text-brand-black px-6 rounded-xl font-bold text-xs hover:bg-brand-goldDark transition uppercase tracking-widest shadow-md">${t('Salvar')}</button></div></div></div></section><section><div class="flex justify-between items-center mb-4 ml-2 mr-2"><p class="text-[10px] font-bold text-brand-gold uppercase tracking-wider">${t('Carteiras')}</p><button onclick="window.promptAddAccount()" class="text-brand-text font-bold text-[10px] uppercase tracking-wider transition bg-brand-border px-4 py-2 rounded-lg hover:text-brand-gold">${t('+ Nova')}</button></div><div class="space-y-3">${window.AppState.accounts.map(acc => `<div class="bg-brand-card p-5 rounded-2xl flex justify-between items-center border border-brand-border shadow-md"><span class="font-bold text-sm text-brand-text">${acc.name}</span><div class="flex items-center gap-5"><span class="text-xs font-bold text-brand-muted">${Utils.formatCurrency(acc.balance)}</span><button onclick="Actions.deleteAccount('${acc.id}'); window.router.navigate('settings')" class="text-brand-border hover:text-rose-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button></div></div>`).join('')}</div></section><section><div class="flex justify-between items-center mb-4 ml-2 mr-2"><p class="text-[10px] font-bold text-brand-gold uppercase tracking-wider">${t('Metas de Orçamento')}</p><button onclick="window.promptAddCategory()" class="text-brand-text font-bold text-[10px] uppercase tracking-wider transition bg-brand-border px-4 py-2 rounded-lg hover:text-brand-gold">${t('+ Categoria')}</button></div><div class="space-y-4">${window.AppState.categories.map(cat => `<div class="bg-brand-card p-6 rounded-2xl border border-brand-border shadow-md"><div class="flex justify-between items-center mb-5"><span class="font-bold text-sm text-brand-text">${cat.name}</span><div class="flex items-center gap-4"><span class="text-brand-gold font-bold text-sm bg-brand-black border border-brand-border px-4 py-2 rounded-lg shadow-sm">${cat.percent}%</span><button onclick="Actions.deleteCategory('${cat.id}'); window.router.navigate('settings')" class="text-brand-border hover:text-rose-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button></div></div><input type="range" value="${cat.percent}" onchange="window.updateCatPercent('${cat.id}', this.value)" class="w-full"></div>`).join('')}<p class="text-center text-[10px] font-bold ${window.AppState.categories.reduce((a,b)=>a+b.percent,0) === 100 ? 'text-brand-muted' : 'text-rose-500'} uppercase pt-2 tracking-wider">${t('Total Distribuído: {total}% (exigido 100%)', {total: window.AppState.categories.reduce((a,b)=>a+b.percent,0)})}</p></section><section class="pt-8 border-t border-brand-border"><p class="text-[10px] font-bold text-brand-gold uppercase mb-4 ml-2 tracking-wider">${t('Ajuda e Suporte')}</p><button onclick="window.router.navigate('tutorial')" class="w-full py-5 bg-brand-card border border-brand-border text-brand-text font-bold rounded-2xl active:scale-95 transition-all hover:border-brand-gold text-sm tracking-widest uppercase shadow-md flex justify-between items-center px-6"><span>${t('Rever Tutorial Premium')}</span><svg class="w-5 h-5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button></section><section class="pt-8 border-t border-brand-border"><p class="text-[10px] font-bold text-rose-500 uppercase mb-4 ml-2 tracking-wider">${t('Zona de Risco')}</p><button onclick="document.getElementById('danger-zone-confirm').classList.remove('hidden')" class="w-full py-5 bg-brand-card border border-rose-900/30 text-rose-500 font-bold rounded-2xl active:scale-95 transition-all text-sm tracking-widest uppercase shadow-md hover:bg-rose-950/20">${t('Zerar Todos os Lançamentos e Caixinhas')}</button><div id="danger-zone-confirm" class="hidden mt-4 p-6 bg-brand-black border border-rose-900/50 rounded-2xl slide-up shadow-lg"><p class="text-sm text-rose-500 font-bold mb-6 text-center">${t('Isto apagará todo o histórico, saldos e caixinhas. Tens a certeza?')}</p><div class="flex gap-3"><button onclick="Actions.clearAllTransactions()" class="flex-1 bg-rose-600 text-white font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition shadow-md hover:bg-rose-700">${t('Confirmar')}</button><button onclick="document.getElementById('danger-zone-confirm').classList.add('hidden')" class="flex-1 bg-brand-border text-brand-text font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition shadow-md hover:bg-brand-card">${t('Cancelar')}</button></div></div><button onclick="window.Actions.logout()" class="w-full py-5 mt-10 bg-brand-black border border-brand-border text-brand-muted font-bold rounded-2xl active:scale-95 transition-all hover:text-white hover:bg-brand-card text-sm tracking-widest uppercase shadow-md">${t('Sair do Aplicativo')}</button></section></div>`,
+            feedback: () => `<div class="fade-in max-w-2xl mx-auto w-full space-y-8 pt-4 md:pt-10 pb-12"><h2 class="text-2xl font-black mb-10 text-brand-text uppercase tracking-widest text-center">${t('Feedback')}</h2><div class="text-center mb-10"><p class="text-brand-muted text-sm md:text-base font-medium px-4">${t('Ajuda-nos a tornar o MiqueyasFinance ainda mais exclusivo. Envia as tuas sugestões ou ideias diretamente para a nossa equipa.')}</p></div><form onsubmit="window.Actions.sendFeedback(event)" class="bg-brand-card p-6 md:p-10 rounded-3xl border border-brand-border shadow-2xl"><div class="space-y-6"><div><label class="text-[10px] font-bold text-brand-gold uppercase tracking-widest mb-3 block ml-1">${t('Mensagem')}</label><textarea id="feedback-text" rows="6" placeholder="${t('Escreve a tua sugestão aqui...')}" required class="w-full bg-brand-black p-5 rounded-xl outline-none font-semibold text-base text-brand-text border border-brand-border focus:border-brand-gold transition resize-none"></textarea></div></div><button id="btn-send-feedback" type="submit" class="w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition mt-8 text-base tracking-widest uppercase hover:bg-brand-goldDark flex items-center justify-center gap-2"><span>${t('Enviar Feedback')}</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button></form></div>`,
+            tutorial: () => `<div class="fade-in pb-12 max-w-2xl mx-auto w-full pt-4 md:pt-10"><div class="flex items-center justify-between mb-10"><button onclick="window.router.navigate('dashboard')" class="text-brand-muted hover:text-brand-gold transition flex items-center gap-2 font-bold text-sm bg-brand-card px-4 py-2 rounded-xl border border-brand-border"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>${t('Voltar')}</button><span class="text-[10px] font-bold text-brand-gold uppercase tracking-widest">${t('Tutorial Premium')}</span></div><div class="text-center mb-16"><h2 class="text-3xl md:text-4xl font-black text-brand-text tracking-tighter mb-4 text-gradient-gold">${t('O Poder do Controle')}</h2><p class="text-brand-muted text-sm md:text-base font-medium">${t('Aprende a dominar as tuas finanças com a nossa metodologia.')}</p></div><div class="border-l-2 border-brand-border ml-6 pl-10 space-y-16 relative"><div class="relative"><div class="absolute w-5 h-5 bg-brand-gold rounded-full -left-[51px] top-1 shadow-[0_0_15px_rgba(212,175,55,0.5)] border-4 border-brand-black"></div><h3 class="font-bold text-brand-gold mb-3 text-xl">${t('1. Início & Análise')}</h3><p class="text-sm md:text-base text-brand-muted leading-relaxed">${t('Acompanha o teu Património e usa o ecrã de Análise para ver os insights gerados sobre os teus hábitos.')}</p></div><div class="relative"><div class="absolute w-5 h-5 bg-brand-border rounded-full -left-[51px] top-1 border-4 border-brand-black"></div><h3 class="font-bold text-brand-text mb-3 text-xl">${t('2. Tuas Carteiras')}</h3><p class="text-sm md:text-base text-brand-muted leading-relaxed">${t('Podes criar carteiras para o Nubank, MBWay ou dinheiro físico. Todo o registo será vinculado a uma carteira, atualizando o saldo na hora.')}</p></div><div class="relative"><div class="absolute w-5 h-5 bg-brand-border rounded-full -left-[51px] top-1 border-4 border-brand-black"></div><h3 class="font-bold text-brand-text mb-3 text-xl">${t('3. Caixinhas e Orçamento')}</h3><p class="text-sm md:text-base text-brand-muted leading-relaxed">${t('No painel, observa as barras do Orçamento. Cria Caixinhas para os teus sonhos, transferindo fundos das tuas carteiras.')}</p></div><div class="relative"><div class="absolute w-5 h-5 bg-brand-border rounded-full -left-[51px] top-1 border-4 border-brand-black"></div><h3 class="font-bold text-brand-text mb-3 text-xl">${t('4. Relatório VIP')}</h3><p class="text-sm md:text-base text-brand-muted leading-relaxed">${t('No teu Histórico, podes descarregar a qualquer momento um Relatório Financeiro em PDF.')}</p></div></div><div class="mt-20"><button onclick="window.router.navigate('dashboard')" class="w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-sm hover:bg-brand-goldDark">${t('Entendido, vamos a isso!')}</button></div></div>`,
+            onboarding_name: () => `<div class="slide-in-right pt-16 text-center flex flex-col items-center justify-center flex-1 h-full max-w-md mx-auto w-full"><div class="mb-10 flex items-center justify-center">${Utils.getLogoHTML('w-24 h-24')}</div><h1 class="text-3xl font-black mb-4 text-brand-text tracking-tight uppercase">${t('Bem-vindo(a)')}</h1><p class="text-brand-muted mb-12 font-medium text-sm">${t('Como te podemos chamar?')}</p><input type="text" id="onb-name" placeholder="${t('O teu nome')}" class="w-full bg-brand-card p-6 rounded-2xl outline-none font-bold text-xl mb-10 text-center border border-brand-border text-brand-text focus:border-brand-gold transition shadow-lg"><button onclick="if(document.getElementById('onb-name').value) { AppState.user.name = document.getElementById('onb-name').value; window.router.navigate('onboarding_accounts') } else { Utils.showToast(t('Por favor, digite o seu nome'), 'error') }" class="w-full py-5 bg-brand-gold text-brand-black font-bold rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-sm hover:bg-brand-goldDark">${t('Continuar')}</button></div>`,
+            onboarding_accounts: () => `<div class="slide-in-right pt-8 max-w-md mx-auto w-full"><p class="text-[10px] font-bold text-brand-gold uppercase tracking-widest mb-2 text-center md:text-left">${t('Passo 1 de 3')}</p><h2 class="text-2xl font-black mb-4 text-brand-text tracking-tight uppercase text-center md:text-left">${t('Tuas Carteiras')}</h2><p class="text-brand-muted mb-10 font-medium text-sm text-center md:text-left">${t('Adiciona os locais onde guardas dinheiro.')}</p><div id="onb-acc-list" class="space-y-3 mb-10">${window.AppState.accounts.map(acc => `<div class="bg-brand-card p-5 rounded-xl flex justify-between items-center border border-brand-border shadow-md"><span class="font-bold text-brand-text">${acc.name}</span><button onclick="Actions.deleteAccount('${acc.id}'); window.router.navigate('onboarding_accounts')" class="text-brand-border hover:text-rose-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button></div>`).join('')}</div><div class="bg-brand-black border border-brand-border p-6 rounded-3xl mb-12 space-y-5 shadow-lg"><input type="text" id="onb-acc-name" placeholder="${t('Ex: Banco Central')}" class="w-full bg-brand-card p-5 rounded-xl outline-none text-sm font-bold text-brand-text border border-brand-border focus:border-brand-gold transition"><button onclick="if(document.getElementById('onb-acc-name').value){ Actions.addAccount(document.getElementById('onb-acc-name').value); window.router.navigate('onboarding_accounts') }" class="w-full py-4 bg-brand-border text-brand-text rounded-xl font-bold text-xs hover:text-brand-gold hover:bg-brand-card transition uppercase tracking-widest">${t('+ Adicionar Carteira')}</button></div><button onclick="window.router.navigate('onboarding_categories')" class="w-full py-5 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-sm hover:bg-brand-goldDark">${t('Avançar')}</button></div>`,
+            onboarding_categories: () => `<div class="slide-in-right pt-8 max-w-md mx-auto w-full"><p class="text-[10px] font-bold text-brand-gold uppercase tracking-widest mb-2 text-center md:text-left">${t('Passo 2 de 3')}</p><h2 class="text-2xl font-black mb-4 text-brand-text tracking-tight uppercase text-center md:text-left">${t('Regras de Divisão')}</h2><p class="text-brand-muted mb-10 font-medium text-sm text-center md:text-left">${t('Como categorizas os teus gastos?')}</p><div id="onb-cat-list" class="space-y-3 mb-10">${window.AppState.categories.map(cat => `<div class="bg-brand-card p-5 rounded-xl flex justify-between items-center border border-brand-border shadow-md"><span class="font-bold text-brand-text">${cat.name}</span><button onclick="Actions.deleteCategory('${cat.id}'); window.router.navigate('onboarding_categories')" class="text-brand-border hover:text-rose-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button></div>`).join('')}</div><div class="bg-brand-black border border-brand-border p-6 rounded-3xl mb-12 space-y-5 shadow-lg"><input type="text" id="onb-cat-name" placeholder="${t('Ex: Investimentos')}" class="w-full bg-brand-card p-5 rounded-xl outline-none text-sm font-bold text-brand-text border border-brand-border focus:border-brand-gold transition"><button onclick="if(document.getElementById('onb-cat-name').value){ Actions.addCategory(document.getElementById('onb-cat-name').value); window.router.navigate('onboarding_categories') }" class="w-full py-4 bg-brand-border text-brand-text rounded-xl font-bold text-xs hover:text-brand-gold hover:bg-brand-card transition uppercase tracking-widest">${t('+ Adicionar Categoria')}</button></div><button onclick="window.router.navigate('onboarding_percents')" class="w-full py-5 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-sm hover:bg-brand-goldDark">${t('Avançar')}</button></div>`,
+            onboarding_percents: () => `<div class="slide-in-right pt-8 max-w-md mx-auto w-full"><p class="text-[10px] font-bold text-brand-gold uppercase tracking-widest mb-2 text-center md:text-left">${t('Último Passo')}</p><h2 class="text-2xl font-black mb-4 text-brand-text tracking-tight uppercase text-center md:text-left">${t('O Orçamento')}</h2><p class="text-brand-muted mb-10 font-medium text-sm text-center md:text-left">${t('Estabelece limites percentuais para manter a tua riqueza.')}</p><div class="space-y-8 mb-10 bg-brand-card p-8 rounded-3xl border border-brand-border shadow-lg">${window.AppState.categories.map(c => `<div><div class="flex justify-between mb-5 items-center"><span class="font-bold text-sm text-brand-text">${c.name}</span><span id="val-${c.id}" class="text-brand-gold font-bold text-base bg-brand-black border border-brand-border px-4 py-2 rounded-xl shadow-sm">${c.percent}%</span></div><input type="range" value="${c.percent}" oninput="window.updateOnb('${c.id}', this.value)"></div>`).join('')}</div><div id="total-onb" class="text-center font-black text-brand-gold mb-10 text-xl bg-brand-black border border-brand-border py-5 rounded-2xl uppercase tracking-widest shadow-md">${t('Alocado: {total}%', {total: window.AppState.categories.reduce((a,b)=>a+b.percent,0)})}</div><button id="btn-onb" onclick="window.Actions.finishOnb()" class="w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-base hover:bg-brand-goldDark">${t('Finalizar Configuração')}</button></div>`
+        };
+
+        // --- ROTEADOR ---
+        window.router = {
+            navigate: (page) => {
+                const main = document.getElementById('main-content');
+                const nav = document.getElementById('bottom-nav');
+                
+                main.setAttribute('data-current-page', page);
+
+                if (page.startsWith('onboarding') || page === 'login' || page === 'tutorial') {
+                    nav.style.display = 'none'; 
+                } else {
+                    nav.style.display = ''; 
+                }
+
+                if (window.Views[page]) {
+                    main.innerHTML = window.Views[page]();
+
+                    // Dispara a renderização dos gráficos assim que o DOM carregar a página
+                    setTimeout(() => {
+                        if (page === 'dashboard') window.ChartManager.renderDashboardChart();
+                        if (page === 'analysis') window.ChartManager.renderAnalysisChart();
+                    }, 50);
+                }
+
+                // Indicador visual de Ecrã Ativo
+                const navBtns = nav.querySelectorAll('button[data-nav]');
+                navBtns.forEach(btn => {
+                    if (btn.dataset.nav === 'transactions') return; // Ignora o botão de Lançar (cor sólida)
+                    
+                    if (btn.dataset.nav === page) {
+                        btn.classList.add('text-brand-gold');
+                        btn.classList.remove('text-brand-muted');
+                    } else {
+                        btn.classList.remove('text-brand-gold');
+                        btn.classList.add('text-brand-muted');
+                    }
+                });
+                
+                if (page === 'login') {
+                    const form = document.getElementById('loginForm');
+                    if (form) form.onsubmit = (e) => {
+                        e.preventDefault();
+                        window.Actions.login(e.target.email.value, e.target.password.value);
+                    };
+                }
+            }
+        };
+
+        // --- HELPERS DA UI ---
+        window.promptAddAccount = () => {
+            const name = prompt(t("Nome da carteira/conta (Ex: Nubank, Cofre):"));
+            const bal = prompt(t("Saldo inicial (opcional):"), "0");
+            if(name) {
+                Actions.addAccount(name, bal);
+                window.router.navigate('settings');
+            }
+        };
+
+        window.promptAddCategory = () => {
+            const name = prompt(t("Nome da categoria:"));
+            if(name) {
+                Actions.addCategory(name, 0);
+                window.router.navigate('settings');
+            }
+        };
+
+        window.promptNewGoal = () => {
+            const name = prompt(t("Qual o nome do teu sonho/meta? (Ex: Viagem, Carro Novo):"));
+            if(!name) return;
+            const target = prompt(t("Qual o valor alvo a alcançar? (Ex: 5000):"), "0");
+            Actions.addGoal(name, target);
+            window.router.navigate('goals');
+        };
+
+        window.openCaixinhaModal = (goalId, isSaving) => {
+            const goal = window.AppState.goals.find(g => g.id === goalId);
+            if (!goal) return;
+
+            const modal = document.getElementById('caixinha-modal');
+            const content = document.getElementById('caixinha-modal-content');
+            
+            content.innerHTML = `
+                <div class="mb-6 flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-black text-brand-text tracking-tight uppercase">${isSaving ? t('Guardar Dinheiro') : t('Resgatar Dinheiro')}</h3>
+                        <p class="text-brand-gold text-xs font-bold mt-1 uppercase tracking-widest">${goal.name}</p>
+                    </div>
+                    <button onclick="window.closeCaixinhaModal()" class="text-brand-muted hover:text-rose-500 transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+                
+                <p class="text-[10px] font-bold text-brand-muted uppercase mb-3 tracking-wider">${isSaving ? t('De qual carteira o dinheiro vai sair?') : t('Para qual carteira o dinheiro vai voltar?')}</p>
+                <select id="modal-account" class="w-full bg-brand-black p-4 rounded-xl outline-none text-sm font-bold text-brand-text border border-brand-border focus:border-brand-gold transition mb-6">
+                    ${window.AppState.accounts.map(a => `<option value="${a.id}">${a.name} (${Utils.formatCurrency(a.balance)})</option>`).join('')}
+                </select>
+
+                <p class="text-[10px] font-bold text-brand-gold uppercase text-center mb-3 tracking-widest">${t('Valor')}</p>
+                <input type="number" id="modal-amount" step="0.01" placeholder="R$ 0,00" class="w-full bg-transparent text-5xl font-black text-center outline-none text-brand-text placeholder-brand-border tracking-tighter mb-8">
+                
+                <button onclick="window.Actions.transferGoalMoney('${goal.id}', document.getElementById('modal-account').value, document.getElementById('modal-amount').value, ${isSaving})" class="w-full py-5 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 hover:bg-brand-goldDark transition text-sm tracking-widest uppercase">${t('Confirmar Transação')}</button>
+            `;
+            
+            modal.classList.remove('hidden');
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        };
+
+        window.closeCaixinhaModal = () => {
+            const modal = document.getElementById('caixinha-modal');
+            const content = document.getElementById('caixinha-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        window.updateCatPercent = (id, val) => {
+            const cat = window.AppState.categories.find(c => c.id === id);
+            cat.percent = parseInt(val);
+            window.Actions.save();
+            window.router.navigate('settings');
+        };
+
+        window.toggleType = (isExp) => {
+            document.getElementById('t-type').value = isExp ? 'expense' : 'income';
+            document.getElementById('btn-exp').className = isExp ? "flex-1 py-4 rounded-lg text-sm font-bold bg-brand-border text-brand-text shadow transition-all uppercase tracking-widest" : "flex-1 py-4 rounded-lg text-sm font-bold text-brand-muted hover:text-brand-text transition-all uppercase tracking-widest";
+            document.getElementById('btn-inc').className = !isExp ? "flex-1 py-4 rounded-lg text-sm font-bold bg-brand-border text-brand-text shadow transition-all uppercase tracking-widest" : "flex-1 py-4 rounded-lg text-sm font-bold text-brand-muted hover:text-brand-text transition-all uppercase tracking-widest";
+            document.getElementById('category-section').style.display = isExp ? 'block' : 'none';
+        };
+
+        window.submitTransaction = (e) => {
+            e.preventDefault();
+            const type = document.getElementById('t-type').value;
+            const amount = parseFloat(document.getElementById('t-amount').value);
+            const title = document.getElementById('t-title').value;
+            const date = document.getElementById('t-date').value;
+            const accId = document.querySelector('input[name="t-acc"]:checked')?.value;
+            const catId = type === 'expense' ? document.querySelector('input[name="t-cat"]:checked')?.value : null;
+
+            if(!amount || !title || !accId) {
+                Utils.showToast(t("Preencha todos os campos."), "error");
+                return;
+            }
+            
+            Actions.addTransaction({ title, amount, date, type, accountId: accId, categoryId: catId });
+            Utils.showToast(t("Salvo com sucesso!"), "success");
+            window.router.navigate('dashboard');
+        };
+
+        window.updateOnb = (id, val) => {
+            const cat = window.AppState.categories.find(c => c.id === id);
+            cat.percent = parseInt(val);
+            document.getElementById(`val-${id}`).innerText = val + '%';
+            const total = window.AppState.categories.reduce((a, b) => a + b.percent, 0);
+            const btn = document.getElementById('btn-onb');
+            const txt = document.getElementById('total-onb');
+            txt.innerText = t('Alocado: {total}%', {total});
+            if (total === 100) {
+                btn.disabled = false;
+                btn.className = "w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-base hover:bg-brand-goldDark";
+                txt.className = "text-center font-black text-brand-gold mb-10 text-xl bg-brand-black border border-brand-border py-5 rounded-2xl uppercase tracking-widest shadow-md";
+            } else {
+                btn.disabled = true;
+                btn.className = "w-full py-6 bg-brand-border text-brand-muted font-black rounded-xl cursor-not-allowed transition uppercase tracking-widest text-base";
+                txt.className = "text-center font-black text-rose-500 mb-10 text-xl bg-rose-950/20 border border-rose-900/50 py-5 rounded-2xl uppercase tracking-widest shadow-md";
+            }
+        };
+
+        // --- INICIALIZAÇÃO ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const localState = localStorage.getItem('financeApp_state_' + user.uid);
+                if (localState) {
+                    mergeState(JSON.parse(localState));
+                }
+
+                try {
+                    const userRef = doc(db, "users", user.uid);
+                    const snap = await getDoc(userRef);
+                    if (snap.exists()) {
+                        mergeState(snap.data());
+                        localStorage.setItem('financeApp_state_' + user.uid, JSON.stringify(window.AppState));
+                    } else if (!localState) {
+                        await window.Actions.save();
+                    }
+                } catch (e) { 
+                    console.error("Erro de conexão:", e); 
+                }
+                
+                document.getElementById('desktop-logo').innerHTML = Utils.getLogoHTML('w-20 h-20');
+                const wl = document.getElementById('welcome-logo-container');
+                if(wl) wl.innerHTML = Utils.getLogoHTML('w-16 h-16');
+
+                window.updateNavLabels();
+
+                if (!window.AppState.user.onboarded) {
+                    window.router.navigate('onboarding_name');
+                } else {
+                    window.router.navigate('dashboard');
+                    
+                    if (!window.AppState.user.hasSeenTutorial) {
+                        setTimeout(() => {
+                            const modal = document.getElementById('welcome-modal');
+                            if(modal) {
+                                modal.classList.remove('hidden');
+                                void modal.offsetWidth; 
+                                modal.classList.remove('opacity-0');
+                                modal.querySelector('#welcome-modal-content').classList.remove('scale-95');
+                            }
+                        }, 500);
+                    }
+                }
+            } else {
+                window.router.navigate('login');
+            }
+        });
+
+    </script>
+</body>
+</html>
