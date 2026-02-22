@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MiqueyasFinance | Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#d4af37',
+                            goldDark: '#b5952f',
+                            black: '#0a0a0a',
+                            card: '#141414',
+                            border: '#262626',
+                            text: '#f3f4f6',
+                            muted: '#737373',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root { --app-height: 100%; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #000000;
+            height: 100vh;
+            height: 100dvh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Animações Premium com Física (Cubic-Bezier) */
+        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide-in-right { animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        /* Micro-interações e Ícones Animados */
+        .group:hover .anim-arrow { transform: translateX(4px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .group:hover .anim-lift { transform: translateY(-3px) scale(1.05); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .group:hover .anim-spin { transform: rotate(90deg); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .group:hover .anim-wiggle { animation: wiggle 0.5s ease-in-out; }
+        @keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+        
+        .hover-glow { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hover-glow:hover { box-shadow: 0 0 25px rgba(212, 175, 55, 0.12); border-color: rgba(212, 175, 55, 0.3); transform: translateY(-2px); z-index: 10; }
+
+        /* Inputs com ícones (Premium Style) */
+        .input-with-icon { padding-left: 3rem !important; }
+        .icon-wrapper { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #737373; transition: color 0.3s ease; pointer-events: none; }
+        input:focus + .icon-wrapper, textarea:focus + .icon-wrapper { color: #d4af37; }
+        .input-group { position: relative; }
+
+        /* Custom Range Slider Premium */
+        input[type=range] { -webkit-appearance: none; background: transparent; width: 100%; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #d4af37; margin-top: -7px; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); cursor: pointer; transition: transform 0.2s; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #262626; border-radius: 2px; transition: background 0.3s; }
+        input[type=range]:hover::-webkit-slider-runnable-track { background: #333; }
+        
+        ::-webkit-scrollbar { width: 4px; height: 4px; background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 2px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .text-gradient-gold { background: linear-gradient(to right, #fbf5b7, #d4af37, #b5952f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .pulse-gold { animation: pulseGold 2s infinite; }
+        @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+    </style>
+</head>
+<body class="bg-brand-black text-brand-text transition-colors duration-300">
+
+    <div id="app" class="w-full bg-brand-black relative flex flex-col md:flex-row h-full overflow-hidden">
+        
+        <!-- Menu Lateral / Inferior -->
+        <nav id="bottom-nav" class="fixed bottom-0 w-full bg-brand-black/95 backdrop-blur-xl border-t border-brand-border flex justify-evenly py-3 px-0 z-40 md:relative md:w-64 md:h-screen md:flex-col md:justify-start md:pt-8 md:px-2 md:border-t-0 md:border-r transition-all" style="display: none;">
+            
+            <div id="desktop-logo" class="hidden md:flex flex-col items-center justify-center mb-10 mt-4"></div>
+
+            <button data-nav="dashboard" onclick="window.router.navigate('dashboard')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 group-active:scale-95" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span id="nav-lbl-dashboard" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Início</span>
+            </button>
+            
+            <button data-nav="analysis" onclick="window.router.navigate('analysis')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-1 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 group-active:scale-95" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                <span id="nav-lbl-analysis" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Análise</span>
+            </button>
+
+            <button data-nav="transactions" onclick="window.router.navigate('transactions')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 group relative -top-6 md:top-0 md:mt-1">
+                <div class="bg-brand-gold text-brand-black p-3 md:p-2 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.3)] md:shadow-none transition-transform duration-300 group-hover:scale-110 group-active:scale-95 group-hover:bg-brand-goldDark">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:w-5 md:h-5 transition-transform duration-300 group-hover:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                </div>
+                <span id="nav-lbl-transactions" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 md:block hidden">Lançar</span>
+            </button>
+
+            <button data-nav="simulator" onclick="window.router.navigate('simulator')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-1 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 group-active:scale-95" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8"></path><path stroke-linecap="round" stroke-linejoin="round" d="M14 7h7v7"></path></svg>
+                <span id="nav-lbl-simulator" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Simular</span>
+            </button>
+            
+            <button data-nav="goals" onclick="window.router.navigate('goals')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-1 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 group-active:scale-95" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span id="nav-lbl-goals" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Metas</span>
+            </button>
+
+            <button data-nav="feedback" onclick="window.router.navigate('feedback')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-1 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 group-active:scale-95" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                <span id="nav-lbl-feedback" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Feedback</span>
+            </button>
+            
+            <button data-nav="settings" onclick="window.router.navigate('settings')" class="flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-gold transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-1 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span id="nav-lbl-settings" class="text-[9px] md:text-sm font-bold mt-1 md:mt-0 uppercase tracking-widest md:normal-case md:tracking-normal">Ajustes</span>
+            </button>
+        </nav>
+
+        <main id="main-content" class="flex-1 overflow-y-auto px-6 py-8 pb-32 md:pb-8 md:px-12 relative z-10 flex flex-col w-full h-full">
+            <div id="initial-loader" class="flex flex-col items-center justify-center h-full flex-1 space-y-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-gold"></div>
+                <p class="text-brand-gold font-semibold text-xs tracking-widest uppercase">MiqueyasFinance</p>
+            </div>
+        </main>
+
+        <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-brand-card/90 backdrop-blur-md border border-brand-border text-brand-gold px-6 py-4 rounded-2xl shadow-2xl z-50 transition-all duration-500 transform opacity-0 -translate-y-10 pointer-events-none text-center font-bold text-sm flex items-center gap-3">
+            <svg id="toast-icon-svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span id="toast-msg">Mensagem</span>
+        </div>
+
+        <div id="pdf-container" class="hidden"></div>
+    </div>
+
+    <div id="caixinha-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-400">
+        <div class="bg-brand-card border border-brand-border p-8 rounded-3xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-400" id="caixinha-modal-content"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const LINK_DA_SUA_LOGO = ""; 
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9wroNYOQyg-bGfpcJoqeyftyncUdoewg",
+            authDomain: "miqueyasfinance.firebaseapp.com",
+            projectId: "miqueyasfinance",
+            storageBucket: "miqueyasfinance.firebasestorage.app",
+            messagingSenderId: "620156292282",
+            appId: "1:620156292282:web:60bfd3195f6aed0a100683",
+            measurementId: "G-H89T8YLQWL"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#737373';
+
+        window.Locales = {
+            en: {
+                "Início": "Home", "Análise": "Analysis", "Lançar": "Launch", "Metas": "Goals", "Feedback": "Feedback", "Ajustes": "Settings",
+                "Membro Premium": "Premium Member", "Saldo Total": "Current Balance", "Saldo Previsto": "Expected Balance",
+                "Contas + Caixinhas": "Accounts + Goals", "Global": "All Time", "Mensal": "Monthly", "Entradas": "Income", "Saídas": "Expenses",
+                "Saldos nas Carteiras": "Wallet Balances", "Atual": "Current", "Últimos Lançamentos": "Recent Transactions",
+                "Ver Tudo &rarr;": "See All &rarr;", "Nenhum lançamento recente": "No recent transactions", "Regra de Ouro (Orçamento)": "Golden Rule (Budget)",
+                "Meta": "Target", "Limite": "Limit", "Crescimento Positivo": "Positive Growth", "Atenção Patrimonial": "Wealth Alert",
+                "Orçamento Estourado": "Over Budget", "Limite Próximo": "Nearing Limit", "Raio-X de Gastos": "Expense X-Ray",
+                "Aguardando lançamentos para análise.": "Waiting for transactions to analyze.", "Inteligência Financeira": "Financial Intelligence",
+                "Análise automatizada baseada no teu comportamento.": "Automated analysis based on your behavior.", "Caixinhas VIP": "VIP Goals",
+                "Guarda dinheiro de forma direcionada. O saldo aqui continua a contar no teu saldo total.": "Save money with a purpose. The balance here counts towards your total balance.",
+                "Total nas Caixinhas": "Total in Goals", "concluído": "completed", "Guardar": "Save", "Resgatar": "Redeem", "Nova Caixinha": "New Goal",
+                "Histórico": "History", "Baixar PDF VIP": "Download VIP PDF", "Tipos: Todos": "Types: All", "Contas: Todas": "Accounts: All",
+                "Categorias: Todas": "Categories: All", "Nenhuma transação encontrada": "No transactions found", "Apagar": "Delete",
+                "Novo Lançamento": "New Transaction", "Despesa": "Expense", "Receita": "Income", "Valor da Transação": "Transaction Amount",
+                "Descrição do lançamento": "Transaction description", "Selecione a Carteira": "Select Wallet", "Categoria da Despesa": "Expense Category",
+                "Confirmar Lançamento": "Confirm Transaction", "Perfil do Membro": "Member Profile", "Nome de Exibição": "Display Name", "Salvar": "Save",
+                "Carteiras": "Wallets", "+ Nova": "+ New", "Metas de Orçamento": "Budget Goals", "+ Categoria": "+ Category", "Ajuda e Suporte": "Help & Support",
+                "Rever Tutorial Premium": "Review Premium Tutorial", "Zona de Risco": "Danger Zone", "Zerar Todos os Lançamentos e Caixinhas": "Reset All Data",
+                "Isto apagará todo o histórico, saldos e caixinhas. Tens a certeza?": "This will delete all history, balances, and goals. Are you sure?",
+                "Confirmar": "Confirm", "Cancelar": "Cancel", "Sair do Aplicativo": "Log Out", "Mensagem": "Message", "Enviar Feedback": "Send Feedback",
+                "Bem-vindo(a)": "Welcome", "Como te podemos chamar?": "What should we call you?", "Continuar": "Continue", "Passo 1 de 3": "Step 1 of 3",
+                "Tuas Carteiras": "Your Wallets", "Adiciona os locais onde guardas dinheiro.": "Add the places where you keep your money.",
+                "+ Adicionar Carteira": "+ Add Wallet", "Avançar": "Next", "Passo 2 de 3": "Step 2 of 3", "Regras de Divisão": "Division Rules",
+                "Como categorizas os teus gastos?": "How do you categorize your expenses?", "+ Adicionar Categoria": "+ Add Category",
+                "Último Passo": "Last Step", "O Orçamento": "The Budget", "Estabelece limites percentuais para manter a tua riqueza.": "Set percentage limits to maintain your wealth.",
+                "Finalizar Configuração": "Finish Setup", "Idioma": "Language", "Mês:": "Month:", "Total Distribuído: {total}% (exigido 100%)": "Total Distributed: {total}% (100% required)",
+                "Alocado: {total}%": "Allocated: {total}%", "Voltar": "Back",
+                "Tutorial Premium": "Premium Tutorial", "O Poder do Controle": "The Power of Control",
+                "Aprende a dominar as tuas finanças com a nossa metodologia.": "Learn to master your finances with our methodology.",
+                "1. Início & Análise": "1. Home & Analysis", "2. Tuas Carteiras": "2. Your Wallets", "3. Caixinhas e Orçamento": "3. Goals and Budget",
+                "4. Relatório VIP": "4. VIP Report", "Entendido, vamos a isso!": "Got it, let's go!",
+                "Acompanha o teu Saldo Total e usa o ecrã de Análise para ver os insights gerados sobre os teus hábitos.": "Track your Balance and use the Analysis screen to see insights generated about your habits.",
+                "Podes criar carteiras para o Nubank, MBWay ou dinheiro físico. Todo o registo será vinculado a uma carteira, atualizando o saldo na hora.": "You can create wallets for your bank, cash, or e-wallets. Every record will be linked to a wallet, updating the balance instantly.",
+                "No painel, observa as barras do Orçamento. Cria Caixinhas para os teus sonhos, transferindo fundos das tuas carteiras.": "On the dashboard, observe the Budget bars. Create Goals for your dreams by transferring funds from your wallets.",
+                "No teu Histórico, podes descarregar a qualquer momento um Relatório Financeiro em PDF.": "In your History, you can download a Financial Report in PDF at any time.",
+                "Acesso Exclusivo": "Exclusive Access", "E-mail de Membro": "Member E-mail", "Senha": "Password", "Acessar Conta": "Login",
+                "Guardar Dinheiro": "Save Money", "Resgatar Dinheiro": "Redeem Money",
+                "De qual carteira o dinheiro vai sair?": "Which wallet will the money come from?",
+                "Para qual carteira o dinheiro vai voltar?": "Which wallet will the money return to?",
+                "Valor": "Amount",
+                "Aguarde...": "Please wait...", "Credenciais inválidas.": "Invalid credentials.", "Perfil atualizado!": "Profile updated!",
+                "É necessário pelo menos 1 conta.": "At least 1 account is required.", "É necessário pelo menos 1 categoria.": "At least 1 category is required.",
+                "Escreve algo primeiro.": "Write something first.", "Feedback enviado com sucesso!": "Feedback sent successfully!",
+                "Erro ao enviar. Tenta novamente.": "Error sending. Try again.", "Resgata o dinheiro da caixinha antes de a excluíres.": "Redeem the money from the goal before deleting it.",
+                "Valor inválido.": "Invalid amount.", "Saldo insuficiente na carteira escolhida.": "Insufficient balance in the chosen wallet.",
+                "Valor indisponível na caixinha.": "Amount unavailable in the goal.", "Dinheiro Guardado com Sucesso!": "Money Saved Successfully!",
+                "Dinheiro Resgatado com Sucesso!": "Money Redeemed Successfully!", "A gerar PDF, aguarde...": "Generating PDF, please wait...",
+                "PDF VIP baixado com sucesso!": "VIP PDF downloaded successfully!", "Preencha todos os campos.": "Fill in all fields.",
+                "Salvo com sucesso!": "Saved successfully!", "Lançamento apagado.": "Transaction deleted.", "Histórico e Saldos zerados.": "History and Balances reset.",
+                "Ajuda-nos a tornar o MiqueyasFinance ainda mais exclusivo. Envia as tuas sugestões ou ideias diretamente para a nossa equipa.": "Help us make MiqueyasFinance even more exclusive. Send your suggestions or ideas directly to our team.",
+                "Escreve a tua sugestão aqui...": "Write your suggestion here...",
+                "Nome da carteira/conta:": "Wallet/account name:",
+                "Ex: Nubank, Cofre": "Ex: Bank, Safe",
+                "Saldo inicial (opcional):": "Initial balance (optional):",
+                "Nome da categoria:": "Category name:",
+                "Qual o nome do teu sonho/meta?": "What's the name of your dream/goal?",
+                "Ex: Viagem, Carro Novo": "Ex: Travel, New Car",
+                "Qual o valor alvo a alcançar?": "What's the target amount to reach?",
+                "Ex: 5000": "Ex: 5000",
+                "+ Nova Carteira": "+ New Wallet",
+                "Adiciona um novo local onde guardas dinheiro.": "Add a new place where you keep your money.",
+                "+ Nova Categoria": "+ New Category",
+                "Adiciona uma nova categoria de orçamento.": "Add a new budget category.",
+                "Cria um novo objetivo financeiro.": "Create a new financial goal.",
+                "O teu nome": "Your name", "Por favor, digite o seu nome": "Please, enter your name", "Olá": "Hello",
+                "O teu saldo atual de hoje é": "Your current balance today is", "Atual:": "Current:", "Ex: Banco Central": "Ex: Central Bank", "Ex: Investimentos": "Ex: Investments",
+                "Parabéns! Registaste <strong>{inc}</strong> em receitas totais. Descontando as tuas despesas de <strong>{exp}</strong>, o teu lucro líquido (saldo positivo) no período é de <span class='font-bold text-green-500'>{diff}</span>.": "Congratulations! You recorded <strong>{inc}</strong> in total revenue. Deducting your expenses of <strong>{exp}</strong>, your net profit (positive balance) in the period is <span class='font-bold text-green-500'>{diff}</span>.",
+                "As tuas despesas de <strong>{exp}</strong> ultrapassaram as tuas receitas de <strong>{inc}</strong>. O défice atual (prejuízo) é de <span class='font-bold text-rose-500'>{diff}</span>.": "Your expenses of <strong>{exp}</strong> exceeded your revenue of <strong>{inc}</strong>. The current deficit (loss) is <span class='font-bold text-rose-500'>{diff}</span>.",
+                "Gastaste <span class='font-bold text-brand-text'>{spent}</span> em <strong>{name}</strong>, ultrapassando a meta recomendada de {limit}.": "You spent <span class='font-bold text-brand-text'>{spent}</span> on <strong>{name}</strong>, exceeding the recommended target of {limit}.",
+                "Atenção aos gastos com <strong>{name}</strong>. Já consumiste <span class='font-bold text-brand-gold'>{percent}%</span> do valor planeado.": "Pay attention to spending on <strong>{name}</strong>. You have already consumed <span class='font-bold text-brand-gold'>{percent}%</span> of the planned amount.",
+                "A tua maior despesa individual no período foi com <span class='font-bold text-brand-text'>\"{title}\"</span>, custando <span class='font-bold text-rose-500'>{amount}</span>.": "Your largest individual expense in the period was on <span class='font-bold text-brand-text'>\"{title}\"</span>, costing <span class='font-bold text-rose-500'>{amount}</span>.",
+                "Relatório Financeiro Confidencial": "Confidential Financial Report", "Membro:": "Member:", "Período Analisado:": "Analyzed Period:",
+                "Todo o Período Histórico": "All Historical Period", "Data de Emissão:": "Issue Date:", "Total de Entradas": "Total Income",
+                "Total de Saídas": "Total Expenses", "Extrato de Lançamentos": "Transaction Statement", "Data": "Date", "Descrição": "Description",
+                "Tipo": "Type", "Valor (R$)": "Amount (R$)", "Entrada": "Income", "Saída": "Expense", "Nenhum lançamento no período.": "No transactions in the period.",
+                "Documento gerado automaticamente por MiqueyasFinance Premium.": "Document automatically generated by MiqueyasFinance Premium.",
+                "Relatorio_Financeiro_": "Financial_Report_",
+                "Evolução do Saldo": "Balance Evolution",
+                "Despesas por Categoria": "Expenses by Category",
+                "MiqueyasFinance Premium": "MiqueyasFinance Premium",
+                "Desliza para explorar o teu novo império financeiro.": "Swipe to explore your new financial empire.",
+                "O Teu Painel de Controle": "Your Dashboard",
+                "Visão global do teu património. Acompanha o saldo de todas as tuas carteiras e caixinhas num único lugar, com gráficos de evolução em tempo real.": "Global view of your wealth. Track the balance of all your wallets and goals in one place, with real-time evolution charts.",
+                "Inteligência Financeira": "Financial Intelligence",
+                "O nosso sistema analisa os teus gastos e gera insights automáticos. Fica a saber exatamente onde gastas mais e recebe alertas de orçamento estourado.": "Our system analyzes your spending and generates automatic insights. Know exactly where you spend the most and receive over-budget alerts.",
+                "A Regra de Ouro": "The Golden Rule",
+                "Define limites percentuais para as tuas categorias de despesa. As nossas barras visuais mostram o teu progresso para que nunca gastes mais do que o planeado.": "Set percentage limits for your expense categories. Our visual bars show your progress so you never spend more than planned.",
+                "Caixinhas de Riqueza": "Wealth Goals",
+                "Guarda dinheiro para os teus sonhos (viagens, emergências) sem tirar o valor do teu saldo total. Guarda e resgata fundos com um único clique.": "Save money for your dreams (travels, emergencies) without removing the value from your total balance. Save and redeem funds with a single click.",
+                "Relatórios VIP": "VIP Reports",
+                "Gera PDFs confidenciais e detalhados de todo o teu histórico de transações ou de meses específicos. Mantém o controlo absoluto na palma da mão.": "Generate confidential and detailed PDFs of your entire transaction history or specific months. Maintain absolute control in the palm of your hand.",
+                "Começar a Construir Riqueza": "Start Building Wealth",
+                "Passo": "Step",
+                "de": "of",
+                "Ainda não és membro?": "Not a member yet?",
+                "Tornar-se Premium": "Become Premium",
+                
+                "Simular": "Simulate",
+                "Máquina do Tempo": "Time Machine",
+                "Projeta o teu futuro e o poder dos juros compostos.": "Project your future and the power of compound interest.",
+                "Parâmetros": "Parameters",
+                "Montante Inicial": "Initial Amount",
+                "Aporte Mensal": "Monthly Contribution",
+                "Taxa Anual": "Annual Rate",
+                "Anos": "Years",
+                "Em {anos} anos, terás:": "In {anos} years, you will have:",
+                "Total Investido": "Total Invested",
+                "Juros Rendidos": "Interest Earned"
+            }
+        };
+
+        window.t = (ptString, params = {}) => {
+            const lang = window.AppState?.settings?.language || 'pt';
+            let str = (lang === 'en' && window.Locales.en[ptString]) ? window.Locales.en[ptString] : ptString;
+            Object.keys(params).forEach(k => { str = str.replace(`{${k}}`, params[k]); });
+            return str;
+        };
+
+        window.updateNavLabels = () => {
+            const el = (id, key) => { const e = document.getElementById(id); if (e) e.innerText = t(key); };
+            el('nav-lbl-dashboard', 'Início'); el('nav-lbl-analysis', 'Análise'); el('nav-lbl-transactions', 'Lançar');
+            el('nav-lbl-simulator', 'Simular'); el('nav-lbl-goals', 'Metas'); el('nav-lbl-feedback', 'Feedback'); el('nav-lbl-settings', 'Ajustes');
+        };
+
+        const DefaultState = {
+            user: { name: 'Usuário', onboarded: false, hasSeenTutorial: false },
+            categories: [
+                { id: 'c1', name: 'Necessidades', percent: 50 },
+                { id: 'c2', name: 'Poupar', percent: 30 },
+                { id: 'c3', name: 'Lazer', percent: 20 }
+            ],
+            accounts: [
+                { id: 'a1', name: 'Dinheiro', balance: 0 },
+                { id: 'a2', name: 'Conta Corrente', balance: 0 }
+            ],
+            goals: [], 
+            transactions: [],
+            goalTransfers: [], 
+            settings: { darkMode: true, hideBalance: false, language: 'pt' },
+            historyFilters: { type: 'all', account: 'all', category: 'all' },
+            currentFilterMonth: new Date().toISOString().slice(0, 7)
+        };
+
+        window.AppState = JSON.parse(JSON.stringify(DefaultState));
+
+        window.ChartManager = {
+            instances: {},
+            renderDashboardChart: () => {
+                const ctx = document.getElementById('dashboard-chart');
+                if (!ctx) return;
+                const labels = [];
+                const data = [];
+                const d = new Date();
+                for (let i = 5; i >= 0; i--) {
+                    const pastMonth = new Date(d.getFullYear(), d.getMonth() - i, 1);
+                    const monthStr = pastMonth.toISOString().slice(0, 7);
+                    const hist = window.Utils.getHistoricalState(monthStr);
+                    const label = pastMonth.toLocaleDateString(window.AppState.settings.language === 'en' ? 'en-US' : 'pt-BR', { month: 'short' }).toUpperCase();
+                    labels.push(label);
+                    data.push(hist.totalBalance);
+                }
+                if (window.ChartManager.instances.dashboard) window.ChartManager.instances.dashboard.destroy();
+                window.ChartManager.instances.dashboard = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: t('Saldo Total'),
+                            data: data,
+                            borderColor: '#d4af37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#141414',
+                            pointBorderColor: '#d4af37',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { color: '#262626', drawBorder: false }, ticks: { color: '#737373', font: { size: 10, weight: 'bold' } } },
+                            y: { 
+                                grid: { color: '#262626', drawBorder: false, borderDash: [5, 5] }, 
+                                ticks: { 
+                                    color: '#737373', 
+                                    font: { size: 10, weight: 'bold' }, 
+                                    callback: (value) => window.AppState.settings.hideBalance ? '•••' : 'R$ ' + value 
+                                } 
+                            }
+                        }
+                    }
+                });
+            },
+            renderAnalysisChart: () => {
+                const ctx = document.getElementById('analysis-chart');
+                if (!ctx) return;
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                const labels = [];
+                const data = [];
+                const backgroundColors = ['#d4af37', '#b5952f', '#fbf5b7', '#404040', '#737373', '#262626', '#a3a3a3'];
+                window.AppState.categories.forEach((cat) => {
+                    const spent = trans.filter(tObj => tObj.type === 'expense' && tObj.categoryId === cat.id).reduce((a, b) => a + b.amount, 0);
+                    if (spent > 0) {
+                        labels.push(cat.name);
+                        data.push(spent);
+                    }
+                });
+                if (data.length === 0) {
+                    ctx.parentElement.innerHTML = `<div class="h-full flex items-center justify-center text-brand-muted text-xs font-bold uppercase tracking-widest">${t('Nenhum lançamento recente')}</div>`;
+                    return;
+                }
+                if (window.ChartManager.instances.analysis) window.ChartManager.instances.analysis.destroy();
+                window.ChartManager.instances.analysis = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors.slice(0, data.length),
+                            borderColor: '#141414',
+                            borderWidth: 3,
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '75%',
+                        plugins: {
+                            legend: { 
+                                position: 'right', 
+                                labels: { color: '#f3f4f6', font: { size: 11, weight: '600' }, usePointStyle: true, boxWidth: 8, padding: 20 } 
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => {
+                                        let label = context.label || '';
+                                        if (label) label += ': ';
+                                        if (context.parsed !== null) label += window.Utils.formatCurrency(context.parsed);
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+            renderSimulatorChart: (labels, invested, interest) => {
+                const ctx = document.getElementById('simulator-chart');
+                if (!ctx) return;
+                if (window.ChartManager.instances.simulator) window.ChartManager.instances.simulator.destroy();
+                window.ChartManager.instances.simulator = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: t('Total Investido'), data: invested, backgroundColor: '#404040', stacked: true, borderRadius: 2 },
+                            { label: t('Juros Rendidos'), data: interest, backgroundColor: '#d4af37', stacked: true, borderRadius: {topLeft: 4, topRight: 4} }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { position: 'bottom', labels: { color: '#737373', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } },
+                            tooltip: {
+                                callbacks: { label: (context) => context.dataset.label + ': ' + window.Utils.formatCurrency(context.raw) }
+                            }
+                        },
+                        scales: {
+                            x: { stacked: true, grid: { display: false }, ticks: { color: '#737373', font: { size: 9, weight: 'bold' } } },
+                            y: { 
+                                stacked: true, 
+                                grid: { color: '#262626', drawBorder: false, borderDash: [5, 5] }, 
+                                ticks: { 
+                                    color: '#737373', 
+                                    font: { size: 10, weight: 'bold' }, 
+                                    callback: (value) => window.AppState.settings.hideBalance ? '•••' : 'R$ ' + value 
+                                } 
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        window.Utils = {
+            generateId: () => '_' + Math.random().toString(36).substr(2, 9),
+            formatCurrency: (value) => {
+                if (window.AppState.settings.hideBalance) return 'R$ •••••';
+                return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+            },
+            formatDate: (dateStr) => {
+                if(!dateStr) return '';
+                const [year, month, day] = dateStr.split('-');
+                return `${day}/${month}/${year}`;
+            },
+            showToast: (msg, type = 'success') => {
+                const toast = document.getElementById('toast');
+                const iconSvg = document.getElementById('toast-icon-svg');
+                
+                document.getElementById('toast-msg').innerText = msg;
+                if (type === 'error') {
+                    toast.className = "fixed top-8 left-1/2 -translate-x-1/2 bg-rose-950/90 backdrop-blur-md border border-rose-900 text-rose-500 px-6 py-4 rounded-2xl shadow-2xl z-50 transition-all duration-500 transform opacity-0 -translate-y-10 pointer-events-none text-center font-bold text-sm flex items-center gap-3";
+                    iconSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />';
+                } else {
+                    toast.className = "fixed top-8 left-1/2 -translate-x-1/2 bg-brand-card/90 backdrop-blur-md border border-brand-border text-brand-gold px-6 py-4 rounded-2xl shadow-2xl z-50 transition-all duration-500 transform opacity-0 -translate-y-10 pointer-events-none text-center font-bold text-sm flex items-center gap-3";
+                    iconSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />';
+                }
+                toast.classList.remove('opacity-0', '-translate-y-10');
+                toast.classList.add('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', '-translate-y-10');
+                }, 3000);
+            },
+            getHistoricalState: (month) => {
+                const currentMonth = new Date().toISOString().slice(0, 7);
+                const isAll = month === 'all';
+                const isHistorical = !isAll && month < currentMonth;
+                let accs = JSON.parse(JSON.stringify(window.AppState.accounts));
+                let goals = JSON.parse(JSON.stringify(window.AppState.goals));
+                if (isHistorical) {
+                    const endOfMonthStr = month + "-31";
+                    const futureTrans = window.AppState.transactions.filter(t => t.date > endOfMonthStr);
+                    futureTrans.forEach(t => {
+                        const acc = accs.find(a => a.id === t.accountId);
+                        if (acc) {
+                            if (t.type === 'income') acc.balance -= t.amount;
+                            else if (t.type === 'expense') acc.balance += t.amount;
+                        }
+                    });
+                    const futureTransfers = (window.AppState.goalTransfers || []).filter(t => t.date > endOfMonthStr);
+                    futureTransfers.forEach(t => {
+                        const acc = accs.find(a => a.id === t.accountId);
+                        const goal = goals.find(g => g.id === t.goalId);
+                        if (t.isSaving) {
+                            if (acc) acc.balance += t.amount;
+                            if (goal) goal.saved -= t.amount;
+                        } else {
+                            if (acc) acc.balance -= t.amount;
+                            if (goal) goal.saved += t.amount;
+                        }
+                    });
+                }
+                const accountsBalance = accs.reduce((a, b) => a + b.balance, 0);
+                const goalsBalance = goals.reduce((a, b) => a + b.saved, 0);
+                return { accounts: accs, goals, accountsBalance, goalsBalance, totalBalance: accountsBalance + goalsBalance, isHistorical };
+            },
+            getLogoHTML: (sizeClasses) => {
+                const uid = Math.random().toString(36).substring(2, 9);
+                return `<svg class="${sizeClasses} drop-shadow-[0_0_15px_rgba(212,175,55,0.15)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 5 L88 25 V75 L50 95 L12 75 V25 Z" fill="#141414" stroke="#262626" stroke-width="1.5"/><path d="M28 65 V38 L50 54 L72 38 V65" stroke="url(#goldM-${uid})" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="goldM-${uid}" x1="28" y1="65" x2="72" y2="38" gradientUnits="userSpaceOnUse"><stop stop-color="#b5952f"/><stop offset="0.5" stop-color="#d4af37"/><stop offset="1" stop-color="#fbf5b7"/></linearGradient></defs></svg>`;
+            },
+            getEyeOpenSVG: () => `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+            getEyeClosedSVG: () => `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>`
+        };
+
+        window.Actions = {
+            save: async () => {
+                if (!auth.currentUser) return;
+                const stateToSave = JSON.parse(JSON.stringify(window.AppState));
+                try {
+                    const userRef = doc(db, "users", auth.currentUser.uid);
+                    await setDoc(userRef, stateToSave);
+                    localStorage.setItem('financeApp_state_' + auth.currentUser.uid, JSON.stringify(stateToSave));
+                } catch (e) { console.error("Erro ao salvar:", e); }
+            },
+            changeLanguage: (lang) => {
+                window.AppState.settings.language = lang;
+                window.Actions.save();
+                window.updateNavLabels();
+                window.router.navigate(document.getElementById('main-content').getAttribute('data-current-page') || 'dashboard');
+            },
+            addTransaction: (tObj) => {
+                const transaction = { ...tObj, id: Utils.generateId() };
+                window.AppState.transactions.push(transaction);
+                const acc = window.AppState.accounts.find(a => a.id === transaction.accountId);
+                if(acc) { if(transaction.type === 'income') acc.balance += transaction.amount; else acc.balance -= transaction.amount; }
+                window.Actions.save();
+            },
+            deleteTransaction: (id) => {
+                const tObj = window.AppState.transactions.find(x => x.id === id);
+                if (!tObj) return;
+                const acc = window.AppState.accounts.find(a => a.id === tObj.accountId);
+                if (acc) { if (tObj.type === 'income') acc.balance -= tObj.amount; else acc.balance += tObj.amount; }
+                window.AppState.transactions = window.AppState.transactions.filter(x => x.id !== id);
+                window.Actions.save();
+                Utils.showToast(t("Lançamento apagado."));
+                window.router.navigate('history');
+            },
+            clearAllTransactions: () => {
+                window.AppState.transactions = [];
+                window.AppState.goalTransfers = []; 
+                window.AppState.accounts.forEach(a => a.balance = 0);
+                window.AppState.goals.forEach(g => g.saved = 0); 
+                window.Actions.save();
+                Utils.showToast(t("Histórico e Saldos zerados."));
+                document.getElementById('danger-zone-confirm').classList.add('hidden');
+                window.router.navigate('settings');
+            },
+            toggleHideBalance: () => {
+                window.AppState.settings.hideBalance = !window.AppState.settings.hideBalance;
+                window.Actions.save();
+                window.router.navigate(document.getElementById('main-content').getAttribute('data-current-page') || 'dashboard');
+            },
+            updateHistoryFilter: (key, value) => {
+                window.AppState.historyFilters[key] = value;
+                window.Actions.save();
+                window.router.navigate('history');
+            },
+            logout: async () => {
+                await signOut(auth);
+                window.AppState = JSON.parse(JSON.stringify(DefaultState));
+                window.router.navigate('login');
+            },
+            login: async (email, pass) => {
+                const btn = document.getElementById('btn-login');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-brand-black mx-auto"></div>';
+                btn.disabled = true;
+                try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) {
+                    Utils.showToast(t("Credenciais inválidas."), "error");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            },
+            updateUserName: (name) => {
+                if(!name) return;
+                window.AppState.user.name = name;
+                window.Actions.save();
+                Utils.showToast(t("Perfil atualizado!"));
+            },
+            addAccount: (name, balance = 0) => {
+                window.AppState.accounts.push({ id: Utils.generateId(), name, balance: parseFloat(balance) });
+                window.Actions.save();
+            },
+            deleteAccount: (id) => {
+                if(window.AppState.accounts.length <= 1) return Utils.showToast(t("É necessário pelo menos 1 conta."), "error");
+                window.AppState.accounts = window.AppState.accounts.filter(a => a.id !== id);
+                window.AppState.transactions = window.AppState.transactions.filter(tObj => tObj.accountId !== id);
+                window.Actions.save();
+            },
+            addCategory: (name, percent = 0) => {
+                window.AppState.categories.push({ id: Utils.generateId(), name, percent: parseInt(percent) });
+                window.Actions.save();
+            },
+            deleteCategory: (id) => {
+                if(window.AppState.categories.length <= 1) return Utils.showToast(t("É necessário pelo menos 1 categoria."), "error");
+                window.AppState.categories = window.AppState.categories.filter(c => c.id !== id);
+                window.AppState.transactions = window.AppState.transactions.filter(tObj => tObj.categoryId !== id);
+                window.Actions.save();
+            },
+            sendFeedback: async (e) => {
+                e.preventDefault();
+                const text = document.getElementById('feedback-text').value;
+                if (!text.trim()) return Utils.showToast(t('Escreve algo primeiro.'), 'error');
+                
+                const btn = document.getElementById('btn-send-feedback');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-brand-black mx-auto"></div>';
+                btn.disabled = true;
+                
+                try {
+                    await addDoc(collection(db, "feedbacks"), { uid: auth.currentUser.uid, name: window.AppState.user.name, email: auth.currentUser?.email || "", message: text, date: new Date().toISOString() });
+                    Utils.showToast(t("Feedback enviado com sucesso!"));
+                    document.getElementById('feedback-text').value = '';
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                } catch (error) { 
+                    Utils.showToast(t("Erro ao enviar. Tenta novamente."), "error"); 
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            },
+            finishOnb: () => {
+                window.AppState.user.onboarded = true;
+                window.Actions.save();
+                window.router.navigate('dashboard');
+            },
+            addGoal: (name, target) => {
+                window.AppState.goals.push({ id: Utils.generateId(), name, target: parseFloat(target), saved: 0 });
+                window.Actions.save();
+            },
+            deleteGoal: (id) => {
+                const g = window.AppState.goals.find(x => x.id === id);
+                if (g && g.saved > 0) return Utils.showToast(t("Resgata o dinheiro da caixinha antes de a excluíres."), "error");
+                window.AppState.goals = window.AppState.goals.filter(c => c.id !== id);
+                window.Actions.save();
+                window.closeCaixinhaModal();
+                window.router.navigate('goals');
+            },
+            transferGoalMoney: (goalId, accountId, amount, isSaving) => {
+                const acc = window.AppState.accounts.find(a => a.id === accountId);
+                const goal = window.AppState.goals.find(g => g.id === goalId);
+                const val = parseFloat(amount);
+                if (!val || val <= 0) return Utils.showToast(t("Valor inválido."), "error");
+                if (isSaving) {
+                    if (acc.balance < val) return Utils.showToast(t("Saldo insuficiente na carteira escolhida."), "error");
+                    acc.balance -= val; goal.saved += val;
+                } else {
+                    if (goal.saved < val) return Utils.showToast(t("Valor indisponível na caixinha."), "error");
+                    acc.balance += val; goal.saved -= val;
+                }
+                if (!window.AppState.goalTransfers) window.AppState.goalTransfers = [];
+                window.AppState.goalTransfers.push({ id: Utils.generateId(), goalId, accountId, amount: val, isSaving, date: new Date().toISOString().split('T')[0] });
+                window.Actions.save();
+                window.closeCaixinhaModal();
+                window.router.navigate('goals');
+                Utils.showToast(isSaving ? t("Dinheiro Guardado com Sucesso!") : t("Dinheiro Resgatado com Sucesso!"));
+            },
+            exportPDF: () => {
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                trans.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+                const inc = trans.filter(tObj => tObj.type === 'income').reduce((a, b) => a + b.amount, 0);
+                const exp = trans.filter(tObj => tObj.type === 'expense').reduce((a, b) => a + b.amount, 0);
+                
+                const htmlContent = `
+                    <div style="font-family: 'Inter', sans-serif; color: #0a0a0a; padding: 40px; background: #ffffff; width: 100%; max-width: 800px; margin: 0 auto;">
+                        <div style="text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 20px; margin-bottom: 30px;">
+                            <h1 style="color: #b5952f; font-size: 28px; margin: 0; text-transform: uppercase; letter-spacing: 2px;">MiqueyasFinance Premium</h1>
+                            <p style="color: #737373; font-size: 14px; margin-top: 5px;">${t('Relatório Financeiro Confidencial')}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 30px; padding: 20px; background: #fafafa; border: 1px solid #e5e5e5; border-radius: 8px;">
+                            <p><strong>${t('Membro:')}</strong> ${window.AppState.user.name}</p>
+                            <p><strong>${t('Período Analisado:')}</strong> ${isAll ? t('Todo o Período Histórico') : month}</p>
+                            <p><strong>${t('Data de Emissão:')}</strong> ${new Date().toLocaleDateString(window.AppState.settings.language === 'en' ? 'en-US' : 'pt-BR')}</p>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+                            <div style="width: 48%; padding: 20px; background: #fbf5b7; border-radius: 8px; border: 1px solid #d4af37;">
+                                <h3 style="margin: 0 0 10px 0; color: #b5952f; font-size: 14px; text-transform: uppercase;">${t('Total de Entradas')}</h3>
+                                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #0a0a0a;">R$ ${inc.toFixed(2)}</p>
+                            </div>
+                            <div style="width: 48%; padding: 20px; background: #fff5f5; border-radius: 8px; border: 1px solid #fecdd3;">
+                                <h3 style="margin: 0 0 10px 0; color: #e11d48; font-size: 14px; text-transform: uppercase;">${t('Total de Saídas')}</h3>
+                                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #0a0a0a;">R$ ${exp.toFixed(2)}</p>
+                            </div>
+                        </div>
+
+                        <h3 style="font-size: 16px; border-bottom: 1px solid #e5e5e5; padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase; color: #b5952f;">${t('Extrato de Lançamentos')}</h3>
+                        
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <thead>
+                                <tr style="background: #141414; color: #d4af37;">
+                                    <th style="padding: 12px; text-align: left;">${t('Data')}</th>
+                                    <th style="padding: 12px; text-align: left;">${t('Descrição')}</th>
+                                    <th style="padding: 12px; text-align: left;">${t('Tipo')}</th>
+                                    <th style="padding: 12px; text-align: right;">${t('Valor (R$)')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${trans.map(tObj => `
+                                    <tr style="border-bottom: 1px solid #e5e5e5;">
+                                        <td style="padding: 12px; color: #737373;">${Utils.formatDate(tObj.date)}</td>
+                                        <td style="padding: 12px; font-weight: bold;">${tObj.title}</td>
+                                        <td style="padding: 12px; color: ${tObj.type === 'income' ? '#b5952f' : '#e11d48'}">${tObj.type === 'income' ? t('Entrada') : t('Saída')}</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: bold;">${tObj.amount.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                                ${trans.length === 0 ? `<tr><td colspan="4" style="text-align:center; padding: 20px;">${t('Nenhum lançamento no período.')}</td></tr>` : ''}
+                            </tbody>
+                        </table>
+                        
+                        <div style="margin-top: 50px; text-align: center; color: #737373; font-size: 10px;">
+                            <p>${t('Documento gerado automaticamente por MiqueyasFinance Premium.')}</p>
+                        </div>
+                    </div>
+                `;
+
+                const container = document.getElementById('pdf-container');
+                container.innerHTML = htmlContent;
+                
+                Utils.showToast(t("A gerar PDF, aguarde..."));
+                
+                html2pdf().set({
+                    margin: [10, 10, 10, 10],
+                    filename: `${t('Relatorio_Financeiro_')}${isAll ? t('Global') : month}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                }).from(container.firstElementChild).save().then(() => {
+                    Utils.showToast(t("PDF VIP baixado com sucesso!"));
+                    container.innerHTML = '';
+                });
+            }
+        };
+
+        const mergeState = (loadedState) => {
+            if (!loadedState) return;
+            window.AppState = { ...DefaultState, ...loadedState };
+            window.AppState.settings = { ...DefaultState.settings, ...(loadedState.settings || {}) };
+            if(!window.AppState.goals) window.AppState.goals = [];
+            if(!window.AppState.goalTransfers) window.AppState.goalTransfers = [];
+            window.AppState.settings.darkMode = true;
+            if(!window.AppState.settings.language) window.AppState.settings.language = 'pt';
+        };
+
+        window.openCustomPrompt = (title, description, fields, onConfirm) => {
+            const modal = document.getElementById('caixinha-modal');
+            const content = document.getElementById('caixinha-modal-content');
+
+            let fieldsHTML = fields.map((f, i) => {
+                let html = `<p class="text-[10px] font-bold text-brand-muted uppercase mb-2 mt-${i===0?0:4} tracking-wider">${f.label}</p>`;
+                if (f.type === 'select') {
+                    html += `<select id="custom-prompt-input-${i}" class="w-full bg-brand-black p-4 rounded-xl outline-none text-sm font-bold text-brand-text border border-brand-border focus:border-brand-gold transition">`;
+                    f.options.forEach(opt => {
+                        html += `<option value="${opt.value}">${opt.text}</option>`;
+                    });
+                    html += `</select>`;
+                } else {
+                    html += `<input type="${f.type}" id="custom-prompt-input-${i}" placeholder="${f.placeholder}" value="${f.value || ''}" class="w-full bg-brand-black p-4 rounded-xl outline-none text-sm font-bold text-brand-text border border-brand-border focus:border-brand-gold transition">`;
+                }
+                return html;
+            }).join('');
+
+            content.innerHTML = `
+                <div class="mb-6 flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-black text-brand-text tracking-tight uppercase">${title}</h3>
+                        ${description ? `<p class="text-brand-muted text-xs font-bold mt-1 tracking-widest">${description}</p>` : ''}
+                    </div>
+                    <button onclick="window.closeCaixinhaModal()" class="text-brand-muted hover:text-rose-500 transition group"><svg class="w-6 h-6 anim-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+                <div class="mb-8">${fieldsHTML}</div>
+                <button id="custom-prompt-confirm" class="w-full py-5 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 hover:bg-brand-goldDark transition text-sm tracking-widest uppercase flex items-center justify-center gap-2 group">
+                    <span>${t('Confirmar')}</span>
+                    <svg class="w-4 h-4 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </button>
+            `;
+
+            document.getElementById('custom-prompt-confirm').onclick = () => {
+                const values = fields.map((f, i) => document.getElementById(`custom-prompt-input-${i}`).value);
+                onConfirm(values);
+            };
+
+            modal.classList.remove('hidden');
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+            
+            setTimeout(() => {
+                const firstInput = document.getElementById('custom-prompt-input-0');
+                if(firstInput) firstInput.focus();
+            }, 100);
+        };
+
+        window.promptAddAccount = () => {
+            window.openCustomPrompt(
+                t('+ Nova Carteira'), t('Adiciona um novo local onde guardas dinheiro.'),
+                [ { label: t('Nome da carteira/conta:'), placeholder: t('Ex: Nubank, Cofre'), type: 'text' }, { label: t('Saldo inicial (opcional):'), placeholder: '0.00', type: 'number', value: '0' } ],
+                (values) => {
+                    if (values[0]) { Actions.addAccount(values[0], values[1] || 0); window.closeCaixinhaModal(); window.router.navigate('settings'); } 
+                    else { Utils.showToast(t("Preencha todos os campos."), "error"); }
+                }
+            );
+        };
+
+        window.promptAddCategory = () => {
+            window.openCustomPrompt(
+                t('+ Nova Categoria'), t('Adiciona uma nova categoria de orçamento.'),
+                [ { label: t('Nome da categoria:'), placeholder: t('Ex: Investimentos'), type: 'text' } ],
+                (values) => {
+                    if (values[0]) { Actions.addCategory(values[0], 0); window.closeCaixinhaModal(); window.router.navigate('settings'); } 
+                    else { Utils.showToast(t("Preencha todos os campos."), "error"); }
+                }
+            );
+        };
+
+        window.promptNewGoal = () => {
+            window.openCustomPrompt(
+                t('Nova Caixinha'), t('Cria um novo objetivo financeiro.'),
+                [ { label: t('Qual o nome do teu sonho/meta?'), placeholder: t('Ex: Viagem, Carro Novo'), type: 'text' }, { label: t('Qual o valor alvo a alcançar?'), placeholder: t('Ex: 5000'), type: 'number' } ],
+                (values) => {
+                    if (values[0] && values[1]) { Actions.addGoal(values[0], values[1]); window.closeCaixinhaModal(); window.router.navigate('goals'); } 
+                    else { Utils.showToast(t("Preencha todos os campos."), "error"); }
+                }
+            );
+        };
+
+        window.openCaixinhaModal = (goalId, isSaving) => {
+            const goal = window.AppState.goals.find(g => g.id === goalId);
+            if (!goal) return;
+            const title = isSaving ? t('Guardar') : t('Resgatar');
+            const desc = isSaving ? t('De qual carteira o dinheiro vai sair?') : t('Para qual carteira o dinheiro vai voltar?');
+            
+            const accountOptions = window.AppState.accounts.map(a => ({ value: a.id, text: `${a.name} (${Utils.formatCurrency(a.balance)})` }));
+
+            window.openCustomPrompt(
+                title, desc,
+                [
+                    { label: t('Selecione a Carteira'), type: 'select', options: accountOptions },
+                    { label: t('Valor'), placeholder: '0.00', type: 'number', value: '' }
+                ],
+                (values) => {
+                    if (values[0] && values[1]) {
+                        window.Actions.transferGoalMoney(goalId, values[0], values[1], isSaving);
+                    } else {
+                        Utils.showToast(t("Preencha todos os campos."), "error");
+                    }
+                }
+            );
+        };
+
+        window.closeCaixinhaModal = () => {
+            const modal = document.getElementById('caixinha-modal');
+            const content = document.getElementById('caixinha-modal-content');
+            if(content) content.classList.add('scale-95');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        window.updateCatUI = (id, val, source) => {
+            let num = parseInt(val) || 0;
+            if (num > 100) num = 100;
+            if (num < 0) num = 0;
+            if (source === 'range') { const el = document.getElementById(`cat-num-${id}`); if (el) el.value = num; }
+            if (source === 'num') { const el = document.getElementById(`cat-range-${id}`); if (el) el.value = num; }
+            let total = 0;
+            window.AppState.categories.forEach(c => { if (c.id === id) total += num; else total += c.percent; });
+            const totalEl = document.getElementById('settings-total-percent');
+            if (totalEl) {
+                totalEl.innerText = t('Total Distribuído: {total}% (exigido 100%)', {total: total});
+                totalEl.className = `text-center text-[10px] font-bold uppercase pt-2 tracking-wider ${total === 100 ? 'text-brand-muted' : 'text-rose-500'}`;
+            }
+        };
+
+        window.updateCatPercent = (id, val) => {
+            let num = parseInt(val) || 0;
+            if(num > 100) num = 100;
+            if(num < 0) num = 0;
+            const cat = window.AppState.categories.find(c => c.id === id);
+            if (cat) cat.percent = num;
+            window.Actions.save();
+        };
+
+        window.updateOnbUI = (id, val, source) => {
+            let num = parseInt(val) || 0;
+            if (num > 100) num = 100;
+            if (num < 0) num = 0;
+            if (source === 'range') { const el = document.getElementById(`onb-num-${id}`); if(el) el.value = num; }
+            if (source === 'num') { const el = document.getElementById(`onb-range-${id}`); if(el) el.value = num; }
+            const cat = window.AppState.categories.find(c => c.id === id);
+            if(cat) cat.percent = num; 
+            const total = window.AppState.categories.reduce((a, b) => a + b.percent, 0);
+            const btn = document.getElementById('btn-onb');
+            const txt = document.getElementById('total-onb');
+            if(txt) txt.innerText = t('Alocado: {total}%', {total});
+            if (btn && txt) {
+                if (total === 100) {
+                    btn.disabled = false;
+                    btn.className = "w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-base hover:bg-brand-goldDark group flex justify-center items-center gap-2";
+                    txt.className = "text-center font-black text-brand-gold mb-10 text-xl bg-brand-black border border-brand-border py-5 rounded-2xl uppercase tracking-widest shadow-md";
+                } else {
+                    btn.disabled = true;
+                    btn.className = "w-full py-6 bg-brand-border text-brand-muted font-black rounded-xl cursor-not-allowed transition uppercase tracking-widest text-base flex justify-center items-center gap-2";
+                    txt.className = "text-center font-black text-rose-500 mb-10 text-xl bg-rose-950/20 border border-rose-900/50 py-5 rounded-2xl uppercase tracking-widest shadow-md";
+                }
+            }
+        };
+
+        window.submitTransaction = (e) => {
+            e.preventDefault();
+            const type = document.getElementById('t-type').value;
+            const amount = parseFloat(document.getElementById('t-amount').value);
+            const title = document.getElementById('t-title').value;
+            const date = document.getElementById('t-date').value || new Date().toISOString().split('T')[0];
+            const accId = document.querySelector('input[name="t-acc"]:checked')?.value || window.AppState.accounts[0]?.id;
+            const catId = type === 'expense' ? document.querySelector('input[name="t-cat"]:checked')?.value : null;
+            
+            if(!amount || !title) return Utils.showToast(t("Preencha todos os campos."), "error");
+
+            if (type === 'expense') {
+                const acc = window.AppState.accounts.find(a => a.id === accId);
+                if (acc && acc.balance < amount) {
+                    Utils.showToast(t("Saldo insuficiente na carteira escolhida."), "error");
+                    return;
+                }
+            }
+
+            Actions.addTransaction({ title, amount, date, type, accountId: accId, categoryId: catId });
+            Utils.showToast(t("Salvo com sucesso!"));
+            window.router.navigate('dashboard');
+        };
+
+        window.toggleType = (isExp) => {
+            document.getElementById('t-type').value = isExp ? 'expense' : 'income';
+            const catSec = document.getElementById('category-section');
+            if(catSec) catSec.style.display = isExp ? 'block' : 'none';
+            document.getElementById('btn-exp').className = isExp ? "flex-1 py-4 rounded-lg text-sm font-bold bg-brand-border text-brand-text shadow transition-all uppercase tracking-widest flex items-center justify-center gap-2" : "flex-1 py-4 rounded-lg text-sm font-bold text-brand-muted hover:text-brand-text transition-all uppercase tracking-widest flex items-center justify-center gap-2";
+            document.getElementById('btn-inc').className = !isExp ? "flex-1 py-4 rounded-lg text-sm font-bold bg-brand-border text-brand-text shadow transition-all uppercase tracking-widest flex items-center justify-center gap-2" : "flex-1 py-4 rounded-lg text-sm font-bold text-brand-muted hover:text-brand-text transition-all uppercase tracking-widest flex items-center justify-center gap-2";
+        };
+
+        window.updateSimulator = () => {
+            const P = parseFloat(document.getElementById('sim-initial').value) || 0;
+            const PMT = parseFloat(document.getElementById('sim-monthly').value) || 0;
+            const t_years = parseInt(document.getElementById('sim-years').value) || 10;
+            const r = (parseFloat(document.getElementById('sim-rate').value) || 8) / 100;
+            const n = 12;
+
+            let labels = [];
+            let investedData = [];
+            let interestData = [];
+            let currentTotal = P;
+
+            for(let i = 1; i <= t_years; i++) {
+                labels.push(i + ' ' + t('Anos'));
+                let totalFV, totInvest;
+                if (r === 0) {
+                    totalFV = P + (PMT * 12 * i);
+                    totInvest = totalFV;
+                } else {
+                    let fv1 = P * Math.pow(1 + r/n, n * i);
+                    let fv2 = PMT * ((Math.pow(1 + r/n, n * i) - 1) / (r/n));
+                    totalFV = fv1 + fv2;
+                    totInvest = P + (PMT * 12 * i);
+                }
+                investedData.push(totInvest);
+                interestData.push(totalFV - totInvest);
+                if(i === t_years) currentTotal = totalFV;
+            }
+
+            const finalInvested = investedData[investedData.length - 1];
+            const finalInterest = interestData[interestData.length - 1];
+
+            document.getElementById('sim-result-total').innerText = Utils.formatCurrency(currentTotal);
+            document.getElementById('sim-result-invested').innerText = Utils.formatCurrency(finalInvested);
+            document.getElementById('sim-result-interest').innerText = Utils.formatCurrency(finalInterest);
+            document.getElementById('sim-years-label').innerText = t_years;
+            document.getElementById('sim-rate-label').innerText = (r * 100).toFixed(1) + '%';
+            document.getElementById('sim-years-title').innerText = t('Em {anos} anos, terás:', {anos: t_years});
+
+            window.ChartManager.renderSimulatorChart(labels, investedData, interestData);
+        };
+
+        window.TutorialManager = {
+            currentStep: 0,
+            steps: [
+                { icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>', title: 'O Teu Painel de Controle', desc: 'Visão global do teu património. Acompanha o saldo de todas as tuas carteiras e caixinhas num único lugar, com gráficos de evolução em tempo real.' },
+                { icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>', title: 'Inteligência Financeira', desc: 'O nosso sistema analisa os teus gastos e gera insights automáticos. Fica a saber exatamente onde gastas mais e recebe alertas de orçamento estourado.' },
+                { icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>', title: 'A Regra de Ouro', desc: 'Define limites percentuais para as tuas categorias de despesa. As nossas barras visuais mostram o teu progresso para que nunca gastes mais do que o planeado.' },
+                { icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>', title: 'Caixinhas de Riqueza', desc: 'Guarda dinheiro para os teus sonhos (viagens, emergências) sem tirar o valor do teu saldo total. Guarda e resgata fundos com um único clique.' },
+                { icon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>', title: 'Relatórios VIP', desc: 'Gera PDFs confidenciais e detalhados de todo o teu histórico de transações ou de meses específicos. Mantém o controlo absoluto na palma da mão.' }
+            ],
+            render: () => {
+                const step = window.TutorialManager.steps[window.TutorialManager.currentStep];
+                const total = window.TutorialManager.steps.length;
+                document.getElementById('tut-content').innerHTML = `
+                    <div class="absolute -right-16 -top-16 w-48 h-48 bg-brand-gold opacity-5 blur-[50px] rounded-full"></div>
+                    <div class="w-16 h-16 bg-brand-black border border-brand-border rounded-2xl flex items-center justify-center text-brand-gold mb-8 shadow-inner shrink-0 relative z-10">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">${step.icon}</svg>
+                    </div>
+                    <div class="mt-auto relative z-10">
+                        <span class="text-[9px] font-black text-brand-gold uppercase tracking-widest mb-2 block bg-brand-gold/10 w-fit px-2 py-1 rounded-md">${t('Passo')} ${window.TutorialManager.currentStep + 1} ${t('de')} ${total}</span>
+                        <h3 class="font-black text-xl text-brand-text mb-3 uppercase tracking-wider leading-tight">${t(step.title)}</h3>
+                        <p class="text-sm text-brand-muted leading-relaxed font-medium">${t(step.desc)}</p>
+                    </div>
+                `;
+
+                document.getElementById('tut-dots').innerHTML = window.TutorialManager.steps.map((s, i) => `
+                    <div class="h-2 rounded-full transition-all duration-300 ${i === window.TutorialManager.currentStep ? 'w-8 bg-brand-gold' : 'w-2 bg-brand-border'}"></div>
+                `).join('');
+
+                const btnPrev = document.getElementById('tut-btn-prev');
+                const btnNext = document.getElementById('tut-btn-next');
+                const btnFinish = document.getElementById('tut-btn-finish');
+
+                if (window.TutorialManager.currentStep === 0) btnPrev.classList.add('hidden');
+                else btnPrev.classList.remove('hidden');
+
+                if (window.TutorialManager.currentStep === total - 1) {
+                    btnNext.classList.add('hidden');
+                    btnFinish.classList.remove('hidden');
+                } else {
+                    btnNext.classList.remove('hidden');
+                    btnFinish.classList.add('hidden');
+                }
+            },
+            next: () => {
+                if (window.TutorialManager.currentStep < window.TutorialManager.steps.length - 1) {
+                    window.TutorialManager.currentStep++;
+                    window.TutorialManager.render();
+                }
+            },
+            prev: () => {
+                if (window.TutorialManager.currentStep > 0) {
+                    window.TutorialManager.currentStep--;
+                    window.TutorialManager.render();
+                }
+            }
+        };
+
+        window.Views = {
+            login: () => `
+                <div class="fade-in flex flex-col items-center justify-center flex-1 h-full max-w-sm mx-auto w-full">
+                    <div class="mb-8 flex items-center justify-center">
+                        ${Utils.getLogoHTML('w-28 h-28')}
+                    </div>
+                    <h1 class="text-3xl font-black mb-3 tracking-tight text-brand-text">MiqueyasFinance</h1>
+                    <p class="text-brand-muted mb-8 font-medium text-center text-sm uppercase tracking-widest">${t('Acesso Exclusivo')}</p>
+                    <form id="loginForm" class="w-full space-y-4">
+                        <div class="input-group">
+                            <input type="email" id="email" placeholder="${t('E-mail de Membro')}" required class="w-full bg-brand-card border border-brand-border p-4 rounded-xl outline-none focus:border-brand-gold transition text-brand-text input-with-icon">
+                            <div class="icon-wrapper"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="password" placeholder="${t('Senha')}" required class="w-full bg-brand-card border border-brand-border p-4 rounded-xl outline-none focus:border-brand-gold transition text-brand-text input-with-icon">
+                            <div class="icon-wrapper"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
+                        </div>
+                        <button type="submit" id="btn-login" class="group flex items-center justify-center gap-2 w-full py-4 bg-brand-gold text-brand-black font-bold rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-brand-goldDark active:scale-95 transition-all mt-6 uppercase tracking-widest">
+                            ${t('Acessar Conta')}
+                            <svg class="w-4 h-4 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </form>
+                    
+                    <div class="w-full mt-8 pt-8 border-t border-brand-border/50 text-center">
+                        <p class="text-brand-muted text-xs font-bold uppercase tracking-widest mb-4">${t('Ainda não és membro?')}</p>
+                        <a href="https://buy.stripe.com/dRm14nct7eo2bFk0ReaR200" target="_blank" class="group flex items-center justify-center gap-2 w-full py-4 bg-brand-black border border-brand-gold/40 text-brand-gold font-bold rounded-xl hover:bg-brand-gold/10 hover:border-brand-gold active:scale-95 transition-all text-sm uppercase tracking-widest shadow-[0_0_15px_rgba(212,175,55,0.05)]">
+                            <svg class="w-5 h-5 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                            ${t('Tornar-se Premium')}
+                        </a>
+                    </div>
+                </div>
+            `,
+            dashboard: () => {
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                const recentTrans = [...trans].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+                    
+                const income = trans.filter(tObj => tObj.type === 'income').reduce((a, b) => a + b.amount, 0);
+                const expense = trans.filter(tObj => tObj.type === 'expense').reduce((a, b) => a + b.amount, 0);
+                
+                const hist = Utils.getHistoricalState(month);
+                const currentTotal = window.AppState.accounts.reduce((a,b)=>a+b.balance,0) + window.AppState.goals.reduce((a,b)=>a+b.saved,0);
+
+                return `
+                    <div class="fade-in max-w-6xl mx-auto w-full">
+                        <header class="flex justify-between items-center mb-10">
+                            <div class="flex items-center gap-4 group cursor-default">
+                                <div class="md:hidden group-hover:scale-105 transition">${Utils.getLogoHTML('w-12 h-12')}</div>
+                                <div>
+                                    <h1 class="text-2xl md:text-3xl font-bold leading-none text-brand-text tracking-tight group-hover:text-brand-gold transition">${t('Olá')}, ${window.AppState.user.name.split(' ')[0]}</h1>
+                                    <p class="text-[10px] md:text-xs font-semibold text-brand-gold uppercase tracking-widest mt-1 flex items-center gap-1"><svg class="w-3 h-3 anim-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg> ${t('Membro Premium')}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="Actions.toggleHideBalance()" class="group text-brand-muted hover:text-brand-gold transition bg-brand-card p-3 rounded-xl border border-brand-border shadow-md">
+                                    <div class="anim-lift">
+                                        ${window.AppState.settings.hideBalance ? Utils.getEyeClosedSVG() : Utils.getEyeOpenSVG()}
+                                    </div>
+                                </button>
+                            </div>
+                        </header>
+                        
+                        <div class="lg:grid lg:grid-cols-12 lg:gap-10 items-start">
+                            <div class="lg:col-span-8">
+                                <div class="hover-glow bg-gradient-to-br from-brand-card to-brand-black border border-brand-border rounded-[24px] p-8 md:p-10 shadow-2xl mb-10 relative overflow-hidden group">
+                                    <div class="absolute top-0 right-0 w-48 h-48 bg-brand-gold opacity-10 blur-[60px] rounded-full group-hover:opacity-20 transition-opacity duration-700"></div>
+                                    <div class="relative z-10 flex flex-col md:flex-row justify-between md:items-end gap-6">
+                                        <div>
+                                            <p class="text-brand-muted text-xs font-bold mb-2 uppercase tracking-widest flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                                ${hist.isHistorical ? t('Saldo Previsto') : t('Saldo Total')} 
+                                            </p>
+                                            <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-gradient-gold">${Utils.formatCurrency(hist.totalBalance)}</h2>
+                                            ${hist.isHistorical ? `<p class="text-brand-muted text-[10px] mt-2 font-bold uppercase tracking-widest">${t('O teu saldo atual de hoje é')} <span class="text-brand-gold">${Utils.formatCurrency(currentTotal)}</span></p>` : ''}
+                                        </div>
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex bg-brand-black/50 border border-brand-border/50 p-1 rounded-xl glass-effect shadow-inner w-full md:w-auto">
+                                                <button onclick="AppState.currentFilterMonth='all'; window.router.navigate('dashboard')" class="flex-1 px-4 py-1.5 rounded-lg text-[10px] font-bold transition ${isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Global')}</button>
+                                                <button onclick="AppState.currentFilterMonth='${new Date().toISOString().slice(0, 7)}'; window.router.navigate('dashboard')" class="flex-1 px-4 py-1.5 rounded-lg text-[10px] font-bold transition ${!isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Mensal')}</button>
+                                            </div>
+                                            ${!isAll ? `
+                                                <div class="glass-effect border border-brand-border/50 px-4 py-2 rounded-xl flex items-center justify-center gap-2">
+                                                    <svg class="w-3 h-3 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                    <input type="month" value="${month}" onchange="AppState.currentFilterMonth = this.value; window.router.navigate('dashboard')" class="bg-transparent text-xs font-bold outline-none cursor-pointer text-brand-gold text-center w-full" style="color-scheme: dark;">
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                    <div class="relative z-10 grid grid-cols-2 gap-4 md:gap-6 mt-10">
+                                        <div class="bg-brand-black/50 border border-brand-border/50 p-5 rounded-2xl glass-effect shadow-inner group">
+                                            <p class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-brand-gold mb-1.5 flex items-center gap-1"><svg class="w-3 h-3 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg> ${t('Entradas')}</p>
+                                            <p class="font-bold text-base md:text-lg text-brand-text">${Utils.formatCurrency(income)}</p>
+                                        </div>
+                                        <div class="bg-brand-black/50 border border-brand-border/50 p-5 rounded-2xl glass-effect shadow-inner group">
+                                            <p class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-brand-muted mb-1.5 flex items-center gap-1"><svg class="w-3 h-3 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg> ${t('Saídas')}</p>
+                                            <p class="font-bold text-base md:text-lg text-brand-text">${Utils.formatCurrency(expense)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h3 class="font-bold text-brand-text mb-4 text-sm uppercase tracking-widest flex items-center gap-2"><svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg> ${t('Evolução do Saldo')}</h3>
+                                <div class="bg-brand-card border border-brand-border rounded-[24px] p-4 md:p-6 shadow-md mb-10 h-64 relative hover-glow">
+                                    <canvas id="dashboard-chart"></canvas>
+                                </div>
+
+                                <h3 class="font-bold text-brand-text mb-4 text-sm uppercase tracking-widest flex items-center gap-2"><svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg> ${t('Saldos nas Carteiras')}</h3>
+                                <div class="flex gap-4 overflow-x-auto pb-4 mb-10 snap-x hide-scrollbar md:flex-wrap md:overflow-visible">
+                                    ${hist.accounts.map(acc => {
+                                        const currentAcc = window.AppState.accounts.find(a => a.id === acc.id);
+                                        return `
+                                        <div class="min-w-[150px] flex-1 md:min-w-[200px] snap-center bg-brand-card p-6 rounded-2xl border border-brand-border shadow-md flex flex-col justify-between h-32 relative overflow-hidden hover-glow cursor-default group">
+                                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-brand-border rounded-full opacity-30 group-hover:bg-brand-gold/10 transition-colors duration-500"></div>
+                                            <span class="text-xs font-bold text-brand-muted truncate relative z-10 uppercase tracking-wider">${acc.name}</span>
+                                            <div>
+                                                <span class="font-bold text-lg text-brand-text tracking-tight relative z-10 block">${Utils.formatCurrency(acc.balance)}</span>
+                                                ${hist.isHistorical && acc.balance !== currentAcc.balance ? `<span class="text-[9px] font-bold text-brand-muted uppercase tracking-widest relative z-10 block mt-1">${t('Atual:')} ${Utils.formatCurrency(currentAcc.balance)}</span>` : ''}
+                                            </div>
+                                        </div>
+                                    `}).join('')}
+                                </div>
+
+                                <div class="flex justify-between items-center mb-5">
+                                    <h3 class="font-bold text-brand-text text-sm uppercase tracking-widest flex items-center gap-2"><svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg> ${t('Últimos Lançamentos')}</h3>
+                                    <button onclick="window.router.navigate('history')" class="group text-[10px] font-bold text-brand-gold uppercase tracking-widest hover:text-brand-goldDark transition bg-brand-card px-4 py-2 rounded-lg border border-brand-border shadow-sm hover:scale-105 flex items-center gap-1">${t('Ver Tudo')} <svg class="w-3 h-3 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button>
+                                </div>
+                                <div class="space-y-3 mb-10 lg:mb-0">
+                                    ${recentTrans.length === 0 ? `
+                                        <div class="text-center py-10 bg-brand-card rounded-2xl border border-brand-border shadow-inner">
+                                            <p class="text-brand-muted font-bold text-xs uppercase tracking-widest">${t('Nenhum lançamento recente')}</p>
+                                        </div>
+                                    ` : ''}
+                                    ${recentTrans.map(tObj => {
+                                        const acc = window.AppState.accounts.find(a => a.id === tObj.accountId);
+                                        return `
+                                        <div class="bg-brand-card p-5 rounded-2xl flex items-center gap-5 border border-brand-border shadow-sm hover-glow cursor-default group">
+                                            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl ${tObj.type === 'income' ? 'bg-brand-gold/20 text-brand-gold' : 'bg-brand-border text-brand-muted'} transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
+                                                ${tObj.type === 'income' ? '+' : '-'}
+                                            </div>
+                                            <div class="flex-1 overflow-hidden">
+                                                <p class="font-semibold text-sm md:text-base text-brand-text truncate">${tObj.title}</p>
+                                                <p class="text-[10px] md:text-xs font-bold text-brand-muted uppercase tracking-wider truncate flex gap-1 mt-1">
+                                                    <span>${Utils.formatDate(tObj.date)}</span> &bull; <span>${acc ? acc.name : '?'}</span>
+                                                </p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="font-bold text-base md:text-lg ${tObj.type === 'income' ? 'text-brand-gold' : 'text-brand-text'}">${tObj.type === 'expense' ? '-' : ''}${Utils.formatCurrency(tObj.amount)}</p>
+                                            </div>
+                                        </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-4 bg-brand-card p-6 md:p-8 rounded-[24px] border border-brand-border shadow-xl h-fit hover-glow">
+                                <h3 class="font-bold text-brand-text mb-6 text-sm uppercase tracking-widest text-center border-b border-brand-border pb-4 flex items-center justify-center gap-2"><svg class="w-4 h-4 text-brand-gold pulse-gold rounded-full" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg> ${t('Regra de Ouro (Orçamento)')}</h3>
+                                <div class="space-y-6">
+                                    ${window.AppState.categories.map(cat => {
+                                        const spent = trans.filter(tObj => tObj.type === 'expense' && tObj.categoryId === cat.id).reduce((a, b) => a + b.amount, 0);
+                                        const limit = (income * cat.percent) / 100;
+                                        const p = limit > 0 ? (spent / limit) * 100 : 0;
+                                        return `
+                                            <div class="relative group">
+                                                <div class="flex justify-between items-end mb-3">
+                                                    <div>
+                                                        <span class="font-bold text-sm block text-brand-text group-hover:text-brand-gold transition">${cat.name}</span>
+                                                        <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider mt-1 block">${t('Meta:')} ${cat.percent}%</span>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <span class="font-bold text-sm block text-brand-text">${Utils.formatCurrency(spent)}</span>
+                                                        <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider mt-1 block">${t('Limite:')} ${Utils.formatCurrency(limit)}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full bg-brand-black h-2 rounded-full overflow-hidden border border-brand-border/50 shadow-inner">
+                                                    <div class="bg-brand-gold h-full rounded-full transition-all duration-1000 shadow-[0_0_8px_rgba(212,175,55,0.6)] group-hover:brightness-110" style="width: ${Math.min(p, 100)}%"></div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            analysis: () => {
+                const month = window.AppState.currentFilterMonth;
+                const isAll = month === 'all';
+                const trans = isAll ? window.AppState.transactions : window.AppState.transactions.filter(tObj => tObj.date.startsWith(month));
+                
+                const inc = trans.filter(tObj => tObj.type === 'income').reduce((a, b) => a + b.amount, 0);
+                const exp = trans.filter(tObj => tObj.type === 'expense').reduce((a, b) => a + b.amount, 0);
+                const diff = inc - exp;
+
+                let cards = '';
+
+                if (inc > 0 && diff > 0) {
+                    cards += `
+                        <div class="bg-brand-black p-6 rounded-2xl border border-green-900/50 shadow-[0_0_15px_rgba(34,197,94,0.1)] flex items-start gap-4 mb-4 slide-in-right hover:scale-[1.02] transition-transform duration-300">
+                            <div class="p-3 bg-green-900/20 text-green-500 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>
+                            <div>
+                                <h4 class="font-bold text-brand-text mb-2 uppercase tracking-widest text-xs">${t('Crescimento Positivo')}</h4>
+                                <p class="text-sm text-brand-muted leading-relaxed">${t("Parabéns! Registaste <strong>{inc}</strong> em receitas totais. Descontando as tuas despesas de <strong>{exp}</strong>, o teu lucro líquido (saldo positivo) no período é de <span class='font-bold text-green-500'>{diff}</span>.", {inc: Utils.formatCurrency(inc), exp: Utils.formatCurrency(exp), diff: Utils.formatCurrency(diff)})}</p>
+                            </div>
+                        </div>`;
+                } else if (exp > inc && inc > 0) {
+                    cards += `
+                        <div class="bg-brand-black p-6 rounded-2xl border border-rose-900/50 shadow-[0_0_15px_rgba(225,29,72,0.1)] flex items-start gap-4 mb-4 slide-in-right hover:scale-[1.02] transition-transform duration-300" style="animation-delay: 0.1s">
+                            <div class="p-3 bg-rose-900/20 text-rose-500 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div>
+                            <div>
+                                <h4 class="font-bold text-brand-text mb-2 uppercase tracking-widest text-xs">${t('Atenção ao Saldo')}</h4>
+                                <p class="text-sm text-brand-muted leading-relaxed">${t("As tuas despesas de <strong>{exp}</strong> ultrapassaram as tuas receitas de <strong>{inc}</strong>. O défice atual (prejuízo) é de <span class='font-bold text-rose-500'>{diff}</span>.", {exp: Utils.formatCurrency(exp), inc: Utils.formatCurrency(inc), diff: Utils.formatCurrency(exp - inc)})}</p>
+                            </div>
+                        </div>`;
+                } else if (inc === 0 && exp === 0) {
+                    cards += `<div class="bg-brand-black p-6 rounded-2xl border border-brand-border text-center"><p class="text-brand-muted text-sm font-bold uppercase tracking-widest">${t('Aguardando lançamentos para análise.')}</p></div>`;
+                }
+
+                window.AppState.categories.forEach((cat, idx) => {
+                    const spent = trans.filter(tObj => tObj.type === 'expense' && tObj.categoryId === cat.id).reduce((a,b)=>a+b.amount,0);
+                    const limit = (inc * cat.percent) / 100;
+                    if (limit > 0 && spent > limit) {
+                        cards += `
+                            <div class="bg-brand-black p-6 rounded-2xl border border-brand-border flex items-start gap-4 mb-4 slide-in-right hover:scale-[1.02] transition-transform duration-300" style="animation-delay: ${0.2 + (idx*0.05)}s">
+                                <div class="p-3 bg-brand-card text-rose-500 rounded-xl border border-rose-900/30"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
+                                <div>
+                                    <h4 class="font-bold text-brand-text mb-1 uppercase tracking-widest text-xs">${t('Orçamento Estourado')}</h4>
+                                    <p class="text-sm text-brand-muted leading-relaxed">${t("Gastaste <span class='font-bold text-brand-text'>{spent}</span> em <strong>{name}</strong>, ultrapassando a meta recomendada de {limit}.", {spent: Utils.formatCurrency(spent), name: cat.name, limit: Utils.formatCurrency(limit)})}</p>
+                                </div>
+                            </div>`;
+                    } else if (limit > 0 && spent > (limit * 0.8)) {
+                        cards += `
+                            <div class="bg-brand-black p-6 rounded-2xl border border-brand-border flex items-start gap-4 mb-4 slide-in-right hover:scale-[1.02] transition-transform duration-300" style="animation-delay: ${0.2 + (idx*0.05)}s">
+                                <div class="p-3 bg-brand-card text-brand-gold rounded-xl border border-brand-gold/20"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                                <div>
+                                    <h4 class="font-bold text-brand-text mb-1 uppercase tracking-widest text-xs">${t('Limite Próximo')}</h4>
+                                    <p class="text-sm text-brand-muted leading-relaxed">${t("Atenção aos gastos com <strong>{name}</strong>. Já consumiste <span class='font-bold text-brand-gold'>{percent}%</span> do valor planeado.", {name: cat.name, percent: ((spent/limit)*100).toFixed(0)})}</p>
+                                </div>
+                            </div>`;
+                    }
+                });
+
+                const exps = trans.filter(tObj => tObj.type === 'expense').sort((a,b)=>b.amount - a.amount);
+                if (exps.length > 0) {
+                    cards += `
+                        <div class="bg-brand-black p-6 rounded-2xl border border-brand-border flex items-start gap-4 mb-4 slide-in-right hover:scale-[1.02] transition-transform duration-300" style="animation-delay: 0.4s">
+                            <div class="p-3 bg-brand-card text-brand-text rounded-xl border border-brand-border"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+                            <div>
+                                <h4 class="font-bold text-brand-text mb-1 uppercase tracking-widest text-xs">${t('Raio-X de Gastos')}</h4>
+                                <p class="text-sm text-brand-muted leading-relaxed">${t("A tua maior despesa individual no período foi com <span class='font-bold text-brand-text'>\"{title}\"</span>, custando <span class='font-bold text-rose-500'>{amount}</span>.", {title: exps[0].title, amount: Utils.formatCurrency(exps[0].amount)})}</p>
+                            </div>
+                        </div>`;
+                }
+
+                return `
+                    <div class="fade-in max-w-4xl mx-auto w-full pt-4 md:pt-10 pb-12">
+                        <header class="mb-10 text-center">
+                            <div class="inline-flex p-4 bg-brand-card rounded-full border border-brand-gold pulse-gold mb-6 text-brand-gold hover:scale-110 transition cursor-default">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                            </div>
+                            <h2 class="text-3xl font-black text-brand-text uppercase tracking-widest">${t('Inteligência Financeira')}</h2>
+                            <p class="text-brand-muted text-sm font-medium mt-3">${t('Análise automatizada baseada no teu comportamento.')}</p>
+                        </header>
+                        
+                        <div class="flex justify-center mb-10">
+                            <div class="flex bg-brand-card p-1.5 rounded-xl border border-brand-border">
+                                <button onclick="AppState.currentFilterMonth='all'; window.router.navigate('analysis')" class="px-6 py-2 rounded-lg text-xs font-bold transition ${isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Global')}</button>
+                                <button onclick="AppState.currentFilterMonth='${new Date().toISOString().slice(0, 7)}'; window.router.navigate('analysis')" class="px-6 py-2 rounded-lg text-xs font-bold transition ${!isAll ? 'bg-brand-black text-brand-gold shadow-sm border border-brand-border/50' : 'text-brand-muted hover:text-brand-text'} uppercase tracking-widest">${t('Mensal')}</button>
+                            </div>
+                        </div>
+
+                        <div class="hover-glow bg-brand-card p-6 md:p-8 rounded-3xl border border-brand-border shadow-2xl mb-10 slide-up">
+                            <h3 class="font-bold text-brand-text mb-6 text-sm uppercase tracking-widest text-center">${t('Despesas por Categoria')}</h3>
+                            <div class="h-64 relative w-full flex justify-center">
+                                <canvas id="analysis-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-brand-card p-6 md:p-10 rounded-3xl border border-brand-border shadow-2xl">
+                            ${cards}
+                        </div>
+                    </div>
+                `;
+            },
+            
+            transactions: () => `
+                <div class="fade-in max-w-2xl mx-auto w-full pt-4 md:pt-10 pb-12 px-4 md:px-0">
+                    <header class="mb-8 text-center">
+                        <div class="inline-flex p-4 bg-brand-card rounded-full border border-brand-gold pulse-gold mb-6 text-brand-gold shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:rotate-12 transition cursor-default">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-black text-brand-text uppercase tracking-widest">${t('Novo Lançamento')}</h2>
+                    </header>
+                    <form onsubmit="window.submitTransaction(event)" class="hover-glow bg-brand-card p-6 md:p-8 rounded-3xl border border-brand-border shadow-2xl space-y-6">
+                        <div class="flex bg-brand-black p-1.5 rounded-xl border border-brand-border">
+                            <button type="button" id="btn-exp" onclick="window.toggleType(true)" class="flex-1 py-4 rounded-lg text-sm font-bold bg-brand-border text-brand-text shadow transition-all uppercase tracking-widest flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg> ${t('Despesa')}</button>
+                            <button type="button" id="btn-inc" onclick="window.toggleType(false)" class="flex-1 py-4 rounded-lg text-sm font-bold text-brand-muted hover:text-brand-text transition-all uppercase tracking-widest flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg> ${t('Receita')}</button>
+                        </div>
+                        <input type="hidden" id="t-type" value="expense">
+
+                        <div>
+                            <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-2 block ml-1">${t('Valor da Transação')}</label>
+                            <div class="input-group">
+                                <input type="number" id="t-amount" step="0.01" required placeholder="0.00" class="w-full bg-brand-black p-4 rounded-xl outline-none font-bold text-2xl text-brand-gold border border-brand-border focus:border-brand-gold transition text-center input-with-icon">
+                                <div class="icon-wrapper"><span class="font-bold text-lg leading-none">R$</span></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-2 block ml-1">${t('Descrição')}</label>
+                            <div class="input-group">
+                                <input type="text" id="t-title" required placeholder="${t('Ex: Supermercado')}" class="w-full bg-brand-black p-4 rounded-xl outline-none font-bold text-brand-text border border-brand-border focus:border-brand-gold transition input-with-icon">
+                                <div class="icon-wrapper"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-2 block ml-1">${t('Data')}</label>
+                            <div class="input-group">
+                                <input type="date" id="t-date" required value="${new Date().toISOString().split('T')[0]}" class="w-full bg-brand-black p-4 rounded-xl outline-none font-bold text-brand-text border border-brand-border focus:border-brand-gold transition input-with-icon" style="color-scheme: dark;">
+                                <div class="icon-wrapper"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-3 block ml-1">${t('Selecione a Carteira')}</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                ${window.AppState.accounts.map((a, i) => `
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="t-acc" value="${a.id}" ${i===0?'checked':''} class="peer hidden">
+                                        <div class="bg-brand-black border border-brand-border peer-checked:border-brand-gold peer-checked:text-brand-gold text-brand-muted p-4 rounded-xl text-center font-bold text-[10px] uppercase tracking-widest transition group-hover:border-brand-gold/50">${a.name}</div>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div id="category-section">
+                            <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-3 block ml-1">${t('Categoria da Despesa')}</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                ${window.AppState.categories.map((c, i) => `
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="t-cat" value="${c.id}" ${i===0?'checked':''} class="peer hidden">
+                                        <div class="bg-brand-black border border-brand-border peer-checked:border-brand-gold peer-checked:text-brand-gold text-brand-muted p-3 rounded-xl text-center font-bold text-[10px] uppercase tracking-wider transition group-hover:border-brand-gold/50">${c.name}</div>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="group w-full py-5 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest mt-6 hover:bg-brand-goldDark flex items-center justify-center gap-2">
+                            <span>${t('Confirmar Lançamento')}</span>
+                            <svg class="w-5 h-5 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </button>
+                    </form>
+                </div>
+            `,
+
+            simulator: () => `
+                <div class="fade-in max-w-4xl mx-auto w-full pt-4 md:pt-10 pb-12">
+                    <header class="mb-10 text-center">
+                        <div class="inline-flex p-4 bg-brand-card rounded-full border border-brand-gold pulse-gold mb-6 text-brand-gold shadow-md group">
+                            <svg class="w-8 h-8 anim-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h2 class="text-3xl font-black text-brand-text uppercase tracking-widest">${t('Máquina do Tempo')}</h2>
+                        <p class="text-brand-muted text-sm font-medium mt-3">${t('Projeta o teu futuro e o poder dos juros compostos.')}</p>
+                    </header>
+                    
+                    <div class="lg:grid lg:grid-cols-12 lg:gap-10 items-start">
+                        <div class="lg:col-span-4 bg-brand-card p-6 md:p-8 rounded-[24px] border border-brand-border shadow-2xl mb-10 lg:mb-0 hover-glow">
+                            <h3 class="font-bold text-brand-text mb-6 text-sm uppercase tracking-widest border-b border-brand-border pb-4 flex items-center gap-2"><svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg> ${t('Parâmetros')}</h3>
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-2 block ml-1">${t('Montante Inicial')}</label>
+                                    <div class="input-group">
+                                        <input type="number" id="sim-initial" value="1000" oninput="window.updateSimulator()" class="w-full bg-brand-black p-4 rounded-xl outline-none font-bold text-brand-text border border-brand-border focus:border-brand-gold transition input-with-icon">
+                                        <div class="icon-wrapper"><span class="font-bold text-sm">R$</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-2 block ml-1">${t('Aporte Mensal')}</label>
+                                    <div class="input-group">
+                                        <input type="number" id="sim-monthly" value="200" oninput="window.updateSimulator()" class="w-full bg-brand-black p-4 rounded-xl outline-none font-bold text-brand-text border border-brand-border focus:border-brand-gold transition input-with-icon">
+                                        <div class="icon-wrapper"><span class="font-bold text-sm">R$</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between items-end mb-2">
+                                        <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest ml-1">${t('Taxa Anual')}</label>
+                                        <span id="sim-rate-label" class="text-xs font-bold text-brand-gold">8.0%</span>
+                                    </div>
+                                    <div class="bg-brand-black border border-brand-border rounded-xl p-4">
+                                        <input type="range" id="sim-rate" min="0" max="25" step="0.5" value="8" oninput="window.updateSimulator()" class="w-full">
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between items-end mb-2">
+                                        <label class="text-[10px] font-bold text-brand-muted uppercase tracking-widest ml-1">${t('Anos')}</label>
+                                        <span id="sim-years-label" class="text-xs font-bold text-brand-gold">10</span>
+                                    </div>
+                                    <div class="bg-brand-black border border-brand-border rounded-xl p-4">
+                                        <input type="range" id="sim-years" min="1" max="40" step="1" value="10" oninput="window.updateSimulator()" class="w-full">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-8">
+                            <div class="hover-glow bg-gradient-to-br from-brand-card to-brand-black p-8 rounded-[24px] border border-brand-border shadow-2xl mb-8 relative overflow-hidden group">
+                                <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-gold opacity-10 blur-[80px] rounded-full group-hover:opacity-20 transition-opacity duration-700"></div>
+                                <h3 id="sim-years-title" class="font-bold text-brand-muted text-xs uppercase tracking-widest mb-2 relative z-10 flex items-center gap-2"><svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> ${t('Em {anos} anos, terás:', {anos: 10})}</h3>
+                                <p id="sim-result-total" class="text-4xl md:text-5xl font-black text-gradient-gold tracking-tighter relative z-10">R$ 0,00</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mt-8 relative z-10">
+                                    <div class="bg-brand-black/50 border border-brand-border/50 p-4 rounded-xl glass-effect group">
+                                        <p class="text-[10px] font-bold text-brand-muted uppercase tracking-widest mb-1 flex items-center gap-1"><svg class="w-3 h-3 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> ${t('Total Investido')}</p>
+                                        <p id="sim-result-invested" class="font-bold text-brand-text text-lg">R$ 0,00</p>
+                                    </div>
+                                    <div class="bg-brand-black/50 border border-brand-border/50 p-4 rounded-xl glass-effect group">
+                                        <p class="text-[10px] font-bold text-brand-gold uppercase tracking-widest mb-1 flex items-center gap-1"><svg class="w-3 h-3 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg> ${t('Juros Rendidos')}</p>
+                                        <p id="sim-result-interest" class="font-bold text-brand-text text-lg">R$ 0,00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-brand-card p-6 rounded-[24px] border border-brand-border shadow-xl h-64 hover-glow">
+                                <canvas id="simulator-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            
+            goals: () => `
+                <div class="fade-in max-w-4xl mx-auto w-full pt-4 md:pt-10 pb-12">
+                    <header class="mb-10 text-center">
+                        <div class="inline-flex p-4 bg-brand-card rounded-full border border-brand-gold pulse-gold mb-6 text-brand-gold shadow-md group hover:scale-110 transition cursor-default">
+                            <svg class="w-8 h-8 anim-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                        </div>
+                        <h2 class="text-3xl font-black text-brand-text uppercase tracking-widest">${t('Caixinhas VIP')}</h2>
+                        <p class="text-brand-muted text-sm font-medium mt-3 max-w-md mx-auto leading-relaxed">${t('Guarda dinheiro de forma direcionada. O saldo aqui continua a contar no teu saldo total.')}</p>
+                    </header>
+                    
+                    <div class="flex flex-col md:flex-row justify-between items-center bg-brand-card p-6 rounded-[24px] border border-brand-border shadow-2xl mb-10 hover-glow">
+                        <div class="mb-4 md:mb-0 text-center md:text-left">
+                            <p class="text-brand-muted text-xs font-bold uppercase tracking-widest mb-1 flex items-center justify-center md:justify-start gap-2"><svg class="w-4 h-4 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${t('Total nas Caixinhas')}</p>
+                            <h3 class="text-3xl font-black text-brand-text tracking-tighter">${Utils.formatCurrency(window.AppState.goals.reduce((a,b)=>a+b.saved,0))}</h3>
+                        </div>
+                        <button onclick="window.promptNewGoal()" class="group bg-brand-gold text-brand-black px-8 py-4 rounded-xl font-bold shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-brand-goldDark active:scale-95 transition-all text-sm uppercase tracking-widest flex items-center gap-2">
+                            <svg class="w-4 h-4 anim-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                            ${t('Nova Caixinha')}
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        ${window.AppState.goals.map((g, idx) => {
+                            const p = g.target > 0 ? (g.saved / g.target) * 100 : 0;
+                            return `
+                            <div class="hover-glow bg-brand-card p-6 md:p-8 rounded-[24px] border border-brand-border shadow-xl flex flex-col justify-between slide-up relative overflow-hidden group" style="animation-delay: ${idx * 0.1}s">
+                                <div class="absolute -right-10 -top-10 w-32 h-32 bg-brand-gold opacity-5 rounded-full group-hover:opacity-10 transition-opacity"></div>
+                                <div>
+                                    <div class="flex justify-between items-start mb-6">
+                                        <h4 class="font-bold text-lg text-brand-text flex items-center gap-2"><svg class="w-5 h-5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg> ${g.name}</h4>
+                                        <button onclick="Actions.deleteGoal('${g.id}')" class="text-brand-border hover:text-rose-500 transition group p-2"><svg class="w-5 h-5 anim-wiggle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                                    </div>
+                                    <div class="flex justify-between items-end mb-3">
+                                        <span class="font-bold text-2xl text-brand-text tracking-tight">${Utils.formatCurrency(g.saved)}</span>
+                                        <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider mb-1">${t('Meta:')} ${Utils.formatCurrency(g.target)}</span>
+                                    </div>
+                                    <div class="w-full bg-brand-black h-2.5 rounded-full overflow-hidden border border-brand-border shadow-inner">
+                                        <div class="bg-brand-gold h-full rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(212,175,55,0.6)] group-hover:brightness-110" style="width: ${Math.min(p, 100)}%"></div>
+                                    </div>
+                                    <div class="flex justify-between mt-2">
+                                        <span class="text-[10px] font-bold text-brand-gold uppercase tracking-wider">${p.toFixed(1)}% ${t('concluído')}</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 mt-8">
+                                    <button onclick="window.openCaixinhaModal('${g.id}', true)" class="group flex-1 py-3 bg-brand-black border border-brand-border text-brand-text font-bold rounded-xl hover:border-brand-gold transition shadow-sm text-xs uppercase tracking-widest flex items-center justify-center gap-2"><svg class="w-4 h-4 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> ${t('Guardar')}</button>
+                                    <button onclick="window.openCaixinhaModal('${g.id}', false)" class="group flex-1 py-3 bg-brand-black border border-brand-border text-brand-muted font-bold rounded-xl hover:text-brand-text transition shadow-sm text-xs uppercase tracking-widest flex items-center justify-center gap-2"><svg class="w-4 h-4 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg> ${t('Resgatar')}</button>
+                                </div>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `,
+
+            history: () => {
+                let trans = [...window.AppState.transactions];
+                const filters = window.AppState.historyFilters;
+                if(filters.type !== 'all') trans = trans.filter(tObj => tObj.type === filters.type);
+                if(filters.account !== 'all') trans = trans.filter(tObj => tObj.accountId === filters.account);
+                if(filters.category !== 'all') trans = trans.filter(tObj => tObj.categoryId === filters.category);
+                trans.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+                return `
+                    <div class="fade-in max-w-4xl mx-auto w-full pt-4 md:pt-10 pb-12">
+                        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                            <div class="flex items-center gap-4 group cursor-default">
+                                <div class="p-4 bg-brand-card rounded-xl border border-brand-border shadow-md group-hover:border-brand-gold transition">
+                                    <svg class="w-6 h-6 text-brand-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl md:text-3xl font-black text-brand-text uppercase tracking-widest">${t('Histórico')}</h2>
+                                </div>
+                            </div>
+                            <button onclick="Actions.exportPDF()" class="group bg-brand-gold text-brand-black px-6 py-3 rounded-xl font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-brand-goldDark active:scale-95 transition uppercase tracking-widest flex items-center gap-2">
+                                <svg class="w-4 h-4 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                ${t('Baixar PDF VIP')}
+                            </button>
+                        </header>
+
+                        <div class="bg-brand-card p-6 rounded-3xl border border-brand-border shadow-xl mb-8 flex flex-col md:flex-row gap-4 hover-glow glass-effect">
+                            <div class="flex-1 input-group">
+                                <select onchange="Actions.updateHistoryFilter('type', this.value)" class="w-full bg-brand-black p-4 rounded-xl outline-none text-xs font-bold text-brand-text border border-brand-border focus:border-brand-gold transition uppercase tracking-wider input-with-icon appearance-none">
+                                    <option value="all" ${filters.type === 'all' ? 'selected' : ''}>${t('Tipos: Todos')}</option>
+                                    <option value="income" ${filters.type === 'income' ? 'selected' : ''}>${t('Entradas')}</option>
+                                    <option value="expense" ${filters.type === 'expense' ? 'selected' : ''}>${t('Saídas')}</option>
+                                </select>
+                                <div class="icon-wrapper"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg></div>
+                            </div>
+                            <div class="flex-1 input-group">
+                                <select onchange="Actions.updateHistoryFilter('account', this.value)" class="w-full bg-brand-black p-4 rounded-xl outline-none text-xs font-bold text-brand-text border border-brand-border focus:border-brand-gold transition uppercase tracking-wider input-with-icon appearance-none">
+                                    <option value="all" ${filters.account === 'all' ? 'selected' : ''}>${t('Contas: Todas')}</option>
+                                    ${window.AppState.accounts.map(a => `<option value="${a.id}" ${filters.account === a.id ? 'selected' : ''}>${a.name}</option>`).join('')}
+                                </select>
+                                <div class="icon-wrapper"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg></div>
+                            </div>
+                            <div class="flex-1 input-group">
+                                <select onchange="Actions.updateHistoryFilter('category', this.value)" class="w-full bg-brand-black p-4 rounded-xl outline-none text-xs font-bold text-brand-text border border-brand-border focus:border-brand-gold transition uppercase tracking-wider input-with-icon appearance-none">
+                                    <option value="all" ${filters.category === 'all' ? 'selected' : ''}>${t('Categorias: Todas')}</option>
+                                    ${window.AppState.categories.map(c => `<option value="${c.id}" ${filters.category === c.id ? 'selected' : ''}>${c.name}</option>`).join('')}
+                                </select>
+                                <div class="icon-wrapper"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg></div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            ${trans.length === 0 ? `
+                                <div class="text-center py-20 bg-brand-card rounded-3xl border border-brand-border shadow-inner group">
+                                    <svg class="w-12 h-12 mx-auto text-brand-border mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    <p class="text-brand-muted font-bold text-sm uppercase tracking-widest">${t('Nenhuma transação encontrada')}</p>
+                                </div>
+                            ` : ''}
+                            ${trans.map(tObj => {
+                                const acc = window.AppState.accounts.find(a => a.id === tObj.accountId);
+                                const cat = window.AppState.categories.find(c => c.id === tObj.categoryId);
+                                return `
+                                <div class="bg-brand-card p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-brand-border shadow-md hover-glow slide-up group">
+                                    <div class="flex items-center gap-5">
+                                        <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl ${tObj.type === 'income' ? 'bg-brand-gold/20 text-brand-gold' : 'bg-brand-black border border-brand-border text-brand-muted'} group-hover:rotate-12 group-hover:scale-110 transition duration-300">
+                                            ${tObj.type === 'income' ? '+' : '-'}
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-brand-text text-base">${tObj.title}</p>
+                                            <p class="text-[10px] font-bold text-brand-muted uppercase tracking-wider mt-1 flex gap-2">
+                                                <span>${Utils.formatDate(tObj.date)}</span> &bull; <span>${acc ? acc.name : '?'}</span> ${cat ? `&bull; <span>${cat.name}</span>` : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between md:justify-end gap-6 border-t border-brand-border/50 md:border-t-0 pt-4 md:pt-0 mt-2 md:mt-0">
+                                        <p class="font-black text-lg ${tObj.type === 'income' ? 'text-brand-gold' : 'text-brand-text'}">${tObj.type === 'expense' ? '-' : ''}${Utils.formatCurrency(tObj.amount)}</p>
+                                        <button onclick="Actions.deleteTransaction('${tObj.id}')" class="text-brand-border hover:text-rose-500 transition group p-2 bg-brand-black rounded-lg border border-transparent hover:border-rose-900/30">
+                                            <svg class="w-5 h-5 anim-wiggle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            },
+            
+            feedback: () => `
+                <div class="fade-in max-w-2xl mx-auto w-full pt-4 md:pt-10 pb-12">
+                    <header class="mb-10 text-center">
+                        <div class="inline-flex p-4 bg-brand-card rounded-full border border-brand-gold pulse-gold mb-6 text-brand-gold shadow-md group hover:scale-110 transition cursor-default">
+                            <svg class="w-8 h-8 anim-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                        </div>
+                        <h2 class="text-3xl font-black text-brand-text uppercase tracking-widest">${t('Feedback')}</h2>
+                        <p class="text-brand-muted text-sm font-medium mt-3 leading-relaxed">${t('Ajuda-nos a tornar o MiqueyasFinance ainda mais exclusivo. Envia as tuas sugestões ou ideias diretamente para a nossa equipa.')}</p>
+                    </header>
+                    <div class="hover-glow bg-brand-card p-6 md:p-8 rounded-[24px] border border-brand-border shadow-2xl glass-effect">
+                        <form onsubmit="Actions.sendFeedback(event)" class="space-y-6">
+                            <div class="input-group">
+                                <textarea id="feedback-text" rows="5" required placeholder="${t('Escreve a tua sugestão aqui...')}" class="w-full bg-brand-black p-4 rounded-xl outline-none font-bold text-brand-text border border-brand-border focus:border-brand-gold transition resize-none input-with-icon" style="padding-top: 1rem;"></textarea>
+                                <div class="icon-wrapper" style="top: 1.5rem; transform: none;"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg></div>
+                            </div>
+                            <button type="submit" id="btn-send-feedback" class="group w-full py-5 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest hover:bg-brand-goldDark flex justify-center items-center gap-2">
+                                <span>${t('Enviar Feedback')}</span>
+                                <svg class="w-5 h-5 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `,
+
+            settings: () => `
+                <div class="fade-in max-w-2xl mx-auto w-full space-y-8 pt-4 md:pt-10 pb-12">
+                    <h2 class="text-2xl font-black text-brand-text uppercase tracking-widest text-center mb-10">${t('Ajustes')}</h2>
+                    <section>
+                        <p class="text-[10px] font-bold text-brand-gold uppercase tracking-wider mb-4 ml-2 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> ${t('Idioma')}</p>
+                        <div class="bg-brand-card p-6 rounded-3xl border border-brand-border shadow-lg hover-glow">
+                            <div class="flex gap-3">
+                                <button onclick="Actions.changeLanguage('pt')" class="group flex-1 py-3 rounded-xl font-bold text-xs transition uppercase tracking-widest ${window.AppState.settings.language === 'pt' ? 'bg-brand-gold text-brand-black shadow-md' : 'bg-brand-black border border-brand-border text-brand-muted hover:text-brand-text'}">Português</button>
+                                <button onclick="Actions.changeLanguage('en')" class="group flex-1 py-3 rounded-xl font-bold text-xs transition uppercase tracking-widest ${window.AppState.settings.language === 'en' ? 'bg-brand-gold text-brand-black shadow-md' : 'bg-brand-black border border-brand-border text-brand-muted hover:text-brand-text'}">English</button>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <p class="text-[10px] font-bold text-brand-gold uppercase mb-4 ml-2 tracking-wider flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> ${t('Perfil do Membro')}</p>
+                        <div class="bg-brand-card p-6 rounded-3xl border border-brand-border shadow-lg hover-glow">
+                            <div>
+                                <label class="text-[10px] font-semibold text-brand-muted uppercase block mb-3">${t('Nome de Exibição')}</label>
+                                <div class="flex gap-3">
+                                    <div class="input-group flex-1">
+                                        <input type="text" id="edit-name" value="${window.AppState.user.name}" class="w-full bg-brand-black p-4 rounded-xl outline-none font-bold text-base text-brand-text border border-brand-border focus:border-brand-gold transition input-with-icon">
+                                        <div class="icon-wrapper"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></div>
+                                    </div>
+                                    <button onclick="Actions.updateUserName(document.getElementById('edit-name').value)" class="group bg-brand-gold text-brand-black px-6 rounded-xl font-bold text-xs hover:bg-brand-goldDark transition uppercase tracking-widest shadow-md flex items-center gap-2"><svg class="w-4 h-4 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> ${t('Salvar')}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="flex justify-between items-center mb-4 ml-2 mr-2">
+                            <p class="text-[10px] font-bold text-brand-gold uppercase tracking-wider flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg> ${t('Carteiras')}</p>
+                            <button onclick="window.promptAddAccount()" class="group text-brand-text font-bold text-[10px] uppercase tracking-wider transition bg-brand-border px-4 py-2 rounded-lg hover:text-brand-gold flex items-center gap-1"><svg class="w-3 h-3 anim-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> ${t('+ Nova')}</button>
+                        </div>
+                        <div class="space-y-3">
+                            ${window.AppState.accounts.map(acc => `
+                                <div class="bg-brand-card p-5 rounded-2xl flex justify-between items-center border border-brand-border shadow-md hover-glow transition-all">
+                                    <span class="font-bold text-sm text-brand-text flex items-center gap-2"><svg class="w-4 h-4 text-brand-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg> ${acc.name}</span>
+                                    <div class="flex items-center gap-5">
+                                        <span class="text-xs font-bold text-brand-muted">${Utils.formatCurrency(acc.balance)}</span>
+                                        <button onclick="Actions.deleteAccount('${acc.id}'); window.router.navigate('settings')" class="group text-brand-border hover:text-rose-500 transition p-2"><svg class="w-5 h-5 anim-wiggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                    <section>
+                        <div class="flex justify-between items-center mb-4 ml-2 mr-2">
+                            <p class="text-[10px] font-bold text-brand-gold uppercase tracking-wider flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg> ${t('Metas de Orçamento')}</p>
+                            <button onclick="window.promptAddCategory()" class="group text-brand-text font-bold text-[10px] uppercase tracking-wider transition bg-brand-border px-4 py-2 rounded-lg hover:text-brand-gold flex items-center gap-1"><svg class="w-3 h-3 anim-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg> ${t('+ Categoria')}</button>
+                        </div>
+                        <div class="space-y-4">
+                            ${window.AppState.categories.map(cat => `
+                            <div class="bg-brand-card p-6 rounded-2xl border border-brand-border shadow-md mb-4 hover-glow transition-all">
+                                <div class="flex justify-between items-center mb-5">
+                                    <span class="font-bold text-sm text-brand-text flex items-center gap-2"><svg class="w-4 h-4 text-brand-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg> ${cat.name}</span>
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex items-center gap-1 bg-brand-black border border-brand-border px-3 py-1.5 rounded-lg shadow-sm">
+                                            <input type="number" id="cat-num-${cat.id}" value="${cat.percent}" min="0" max="100" oninput="window.updateCatUI('${cat.id}', this.value, 'num')" onchange="window.updateCatPercent('${cat.id}', this.value)" class="w-10 bg-transparent text-brand-gold font-bold text-right outline-none">
+                                            <span class="text-brand-gold font-bold text-sm">%</span>
+                                        </div>
+                                        <button onclick="Actions.deleteCategory('${cat.id}'); window.router.navigate('settings')" class="group text-brand-border hover:text-rose-500 transition p-2"><svg class="w-5 h-5 anim-wiggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button>
+                                    </div>
+                                </div>
+                                <input type="range" id="cat-range-${cat.id}" value="${cat.percent}" oninput="window.updateCatUI('${cat.id}', this.value, 'range')" onchange="window.updateCatPercent('${cat.id}', this.value)" class="w-full">
+                            </div>
+                            `).join('')}
+                            <p id="settings-total-percent" class="text-center text-[10px] font-bold ${window.AppState.categories.reduce((a,b)=>a+b.percent,0) === 100 ? 'text-brand-muted' : 'text-rose-500'} uppercase pt-2 tracking-wider">${t('Total Distribuído: {total}% (exigido 100%)', {total: window.AppState.categories.reduce((a,b)=>a+b.percent,0)})}</p>
+                        </div>
+                    </section>
+                    <section class="pt-8 border-t border-brand-border">
+                        <p class="text-[10px] font-bold text-brand-gold uppercase mb-4 ml-2 tracking-wider flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${t('Ajuda e Suporte')}</p>
+                        <button onclick="window.router.navigate('tutorial')" class="group w-full py-5 bg-brand-card border border-brand-border text-brand-text font-bold rounded-2xl active:scale-95 transition-all hover:border-brand-gold text-sm tracking-widest uppercase shadow-md flex justify-between items-center px-6 hover-glow">
+                            <span>${t('Rever Tutorial Premium')}</span>
+                            <svg class="w-5 h-5 text-brand-gold anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </section>
+                    <section class="pt-8 border-t border-brand-border">
+                        <p class="text-[10px] font-bold text-rose-500 uppercase mb-4 ml-2 tracking-wider flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> ${t('Zona de Risco')}</p>
+                        <button onclick="document.getElementById('danger-zone-confirm').classList.remove('hidden')" class="w-full py-5 bg-brand-card border border-rose-900/30 text-rose-500 font-bold rounded-2xl active:scale-95 transition-all text-sm tracking-widest uppercase shadow-md hover:bg-rose-950/20">${t('Zerar Todos os Lançamentos e Caixinhas')}</button>
+                        <div id="danger-zone-confirm" class="hidden mt-4 p-6 bg-brand-black border border-rose-900/50 rounded-2xl slide-up shadow-lg">
+                            <p class="text-sm text-rose-500 font-bold mb-6 text-center">${t('Isto apagará todo o histórico, saldos e caixinhas. Tens a certeza?')}</p>
+                            <div class="flex gap-3">
+                                <button onclick="Actions.clearAllTransactions()" class="group flex-1 bg-rose-600 text-white font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition shadow-md hover:bg-rose-700 flex justify-center items-center gap-2"><svg class="w-4 h-4 anim-wiggle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> ${t('Confirmar')}</button>
+                                <button onclick="document.getElementById('danger-zone-confirm').classList.add('hidden')" class="flex-1 bg-brand-border text-brand-text font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition shadow-md hover:bg-brand-card">${t('Cancelar')}</button>
+                            </div>
+                        </div>
+                        <button onclick="window.Actions.logout()" class="group w-full py-5 mt-10 bg-brand-black border border-brand-border text-brand-muted font-bold rounded-2xl active:scale-95 transition-all hover:text-white hover:bg-brand-card text-sm tracking-widest uppercase shadow-md flex justify-center items-center gap-2"><svg class="w-5 h-5 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg> ${t('Sair do Aplicativo')}</button>
+                    </section>
+                </div>
+            `,
+            
+            onboarding: () => {
+                const step1 = `
+                    <div class="fade-in max-w-xl mx-auto w-full pt-10 text-center">
+                        <p class="text-[10px] font-black text-brand-gold uppercase tracking-widest mb-4 bg-brand-gold/10 inline-block px-3 py-1 rounded-md">${t('Passo 1 de 3')}</p>
+                        <h2 class="text-3xl font-black text-brand-text mb-2 uppercase tracking-tight">${t('Bem-vindo(a)')}</h2>
+                        <p class="text-brand-muted text-sm font-medium mb-10">${t('Como te podemos chamar?')}</p>
+                        <div class="input-group mb-10">
+                            <input type="text" id="onb-name" placeholder="${t('O teu nome')}" value="${window.AppState.user.name !== 'Usuário' ? window.AppState.user.name : ''}" class="w-full bg-brand-card p-6 rounded-2xl outline-none font-bold text-xl text-brand-text border border-brand-border focus:border-brand-gold transition text-center shadow-lg input-with-icon">
+                            <div class="icon-wrapper"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div>
+                        </div>
+                        <button onclick="const n=document.getElementById('onb-name').value; if(n){Actions.updateUserName(n); window.router.navigate('onboarding_2')} else {Utils.showToast('${t('Por favor, digite o seu nome')}', 'error')}" class="group w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-brand-goldDark active:scale-95 transition uppercase tracking-widest text-base flex justify-center items-center gap-2">
+                            <span>${t('Continuar')}</span>
+                            <svg class="w-5 h-5 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+                `;
+                
+                const step2 = `
+                    <div class="fade-in max-w-xl mx-auto w-full pt-10">
+                        <div class="text-center">
+                            <p class="text-[10px] font-black text-brand-gold uppercase tracking-widest mb-4 bg-brand-gold/10 inline-block px-3 py-1 rounded-md">${t('Passo 2 de 3')}</p>
+                            <h2 class="text-3xl font-black text-brand-text mb-2 uppercase tracking-tight">${t('Tuas Carteiras')}</h2>
+                            <p class="text-brand-muted text-sm font-medium mb-10">${t('Adiciona os locais onde guardas dinheiro.')}</p>
+                        </div>
+                        <div class="space-y-4 mb-8">
+                            ${window.AppState.accounts.map(a => `
+                                <div class="bg-brand-card p-6 rounded-2xl flex justify-between items-center border border-brand-border shadow-md hover-glow slide-up">
+                                    <span class="font-bold text-base text-brand-text flex items-center gap-3"><svg class="w-5 h-5 text-brand-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg> ${a.name}</span>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-sm font-bold text-brand-muted">${Utils.formatCurrency(a.balance)}</span>
+                                        <button onclick="Actions.deleteAccount('${a.id}'); window.router.navigate('onboarding_2')" class="text-brand-border hover:text-rose-500 transition group p-2"><svg class="w-6 h-6 anim-wiggle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button onclick="window.promptAddAccount()" class="w-full py-5 bg-brand-black border border-brand-border border-dashed text-brand-muted font-bold rounded-2xl hover:border-brand-gold hover:text-brand-gold transition mb-10 text-sm uppercase tracking-widest group flex justify-center items-center gap-2"><svg class="w-5 h-5 anim-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> ${t('+ Adicionar Carteira')}</button>
+                        <div class="flex gap-4">
+                            <button onclick="window.router.navigate('onboarding_1')" class="py-6 px-8 bg-brand-card border border-brand-border text-brand-muted font-black rounded-xl hover:text-brand-text transition uppercase tracking-widest flex items-center justify-center group"><svg class="w-5 h-5 anim-arrow" style="transform: scaleX(-1);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+                            <button onclick="window.router.navigate('onboarding_3')" class="group flex-1 py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-brand-goldDark active:scale-95 transition uppercase tracking-widest text-base flex justify-center items-center gap-2"><span>${t('Avançar')}</span> <svg class="w-5 h-5 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+                        </div>
+                    </div>
+                `;
+                
+                const step3 = `
+                    <div class="fade-in max-w-xl mx-auto w-full pt-10 pb-20">
+                        <div class="text-center">
+                            <p class="text-[10px] font-black text-brand-gold uppercase tracking-widest mb-4 bg-brand-gold/10 inline-block px-3 py-1 rounded-md">${t('Último Passo')}</p>
+                            <h2 class="text-3xl font-black text-brand-text mb-2 uppercase tracking-tight">${t('O Orçamento')}</h2>
+                            <p class="text-brand-muted text-sm font-medium mb-10 max-w-sm mx-auto">${t('Estabelece limites percentuais para manter a tua riqueza.')}</p>
+                        </div>
+                        <div class="space-y-6 mb-8">
+                            ${window.AppState.categories.map((c, i) => `
+                                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border shadow-md slide-up group hover-glow" style="animation-delay: ${i*0.1}s">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <span class="font-bold text-base text-brand-text flex items-center gap-2"><svg class="w-5 h-5 text-brand-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg> ${c.name}</span>
+                                        <div class="flex items-center gap-4">
+                                            <div class="flex items-center gap-1 bg-brand-black border border-brand-border px-3 py-1.5 rounded-lg shadow-inner">
+                                                <input type="number" id="onb-num-${c.id}" value="${c.percent}" min="0" max="100" oninput="window.updateOnbUI('${c.id}', this.value, 'num')" class="w-10 bg-transparent text-brand-gold font-bold text-right outline-none">
+                                                <span class="text-brand-gold font-bold text-sm">%</span>
+                                            </div>
+                                            <button onclick="Actions.deleteCategory('${c.id}'); window.router.navigate('onboarding_3')" class="text-brand-border hover:text-rose-500 transition group p-2"><svg class="w-6 h-6 anim-wiggle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                                        </div>
+                                    </div>
+                                    <input type="range" id="onb-range-${c.id}" value="${c.percent}" oninput="window.updateOnbUI('${c.id}', this.value, 'range')" class="w-full">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button onclick="window.promptAddCategory()" class="w-full py-5 bg-brand-black border border-brand-border border-dashed text-brand-muted font-bold rounded-2xl hover:border-brand-gold hover:text-brand-gold transition mb-10 text-sm uppercase tracking-widest group flex justify-center items-center gap-2"><svg class="w-5 h-5 anim-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> ${t('+ Adicionar Categoria')}</button>
+                        
+                        <div id="total-onb" class="text-center font-black text-brand-gold mb-10 text-xl bg-brand-black border border-brand-border py-5 rounded-2xl uppercase tracking-widest shadow-md">
+                            ${t('Alocado: {total}%', {total: window.AppState.categories.reduce((a, b) => a + b.percent, 0)})}
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <button onclick="window.router.navigate('onboarding_2')" class="py-6 px-8 bg-brand-card border border-brand-border text-brand-muted font-black rounded-xl hover:text-brand-text transition uppercase tracking-widest flex justify-center items-center group"><svg class="w-5 h-5 anim-arrow" style="transform: scaleX(-1);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+                            <button id="btn-onb" onclick="Actions.finishOnb()" class="w-full py-6 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition uppercase tracking-widest text-base hover:bg-brand-goldDark group flex justify-center items-center gap-2">
+                                <span>${t('Finalizar Configuração')}</span>
+                                <svg class="w-5 h-5 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                return { 1: step1, 2: step2, 3: step3 };
+            },
+            
+            tutorial: () => `
+                <div class="fade-in flex flex-col items-center justify-center flex-1 h-full max-w-sm mx-auto w-full pt-10">
+                    <p class="text-[10px] font-black text-brand-gold uppercase tracking-widest mb-6 bg-brand-gold/10 px-3 py-1 rounded-md shadow-sm">${t('MiqueyasFinance Premium')}</p>
+                    
+                    <div class="w-full bg-brand-card border border-brand-border rounded-3xl p-8 mb-10 shadow-2xl relative overflow-hidden h-80 flex flex-col group hover-glow">
+                        <div id="tut-content" class="flex flex-col h-full"></div>
+                    </div>
+                    
+                    <div id="tut-dots" class="flex gap-2 mb-10"></div>
+                    
+                    <div class="w-full flex gap-3">
+                        <button id="tut-btn-prev" onclick="TutorialManager.prev()" class="py-5 px-6 bg-brand-card border border-brand-border text-brand-muted font-bold rounded-xl hover:text-brand-text transition uppercase tracking-widest hidden group"><svg class="w-5 h-5 anim-arrow" style="transform: scaleX(-1);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+                        <button id="tut-btn-next" onclick="TutorialManager.next()" class="group flex-1 py-5 bg-brand-black border border-brand-border text-brand-text font-bold rounded-xl hover:border-brand-gold transition uppercase tracking-widest text-sm flex justify-center items-center gap-2 shadow-md"><span>${t('Avançar')}</span> <svg class="w-4 h-4 anim-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+                        <button id="tut-btn-finish" onclick="AppState.user.hasSeenTutorial=true; Actions.save(); window.router.navigate('dashboard')" class="group flex-1 py-5 bg-brand-gold text-brand-black font-black rounded-xl shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:bg-brand-goldDark transition uppercase tracking-widest text-sm hidden flex justify-center items-center gap-2"><span>${t('Começar a Construir Riqueza')}</span> <svg class="w-4 h-4 anim-lift" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></button>
+                    </div>
+                </div>
+            `
+        };
+
+        window.router = {
+            navigate: (page) => {
+                const main = document.getElementById('main-content');
+                const nav = document.getElementById('bottom-nav');
+                const logo = document.getElementById('desktop-logo');
+                
+                main.setAttribute('data-current-page', page);
+                
+                if (page === 'login') {
+                    nav.style.display = 'none';
+                    main.className = "flex-1 overflow-y-auto relative z-10 flex flex-col w-full h-full";
+                    main.innerHTML = window.Views.login();
+                    if(logo) logo.innerHTML = '';
+                    
+                    document.getElementById('loginForm').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        Actions.login(document.getElementById('email').value, document.getElementById('password').value);
+                    });
+                    return;
+                }
+
+                if (page.startsWith('onboarding')) {
+                    nav.style.display = 'none';
+                    main.className = "flex-1 overflow-y-auto px-6 relative z-10 flex flex-col w-full h-full pb-10";
+                    const step = page.split('_')[1];
+                    main.innerHTML = window.Views.onboarding()[step];
+                    window.updateOnbUI('dummy', '0'); 
+                    return;
+                }
+
+                if (page === 'tutorial') {
+                    nav.style.display = 'none';
+                    main.className = "flex-1 overflow-y-auto px-6 relative z-10 flex flex-col w-full h-full pb-10";
+                    main.innerHTML = window.Views.tutorial();
+                    window.TutorialManager.currentStep = 0;
+                    window.TutorialManager.render();
+                    return;
+                }
+
+                if (window.innerWidth >= 768) {
+                    nav.style.display = 'flex';
+                    if(logo) logo.innerHTML = Utils.getLogoHTML('w-16 h-16 mb-4') + `<p class="text-[10px] font-black tracking-widest uppercase text-brand-gold bg-brand-gold/10 px-2 py-1 rounded">Premium</p>`;
+                } else {
+                    nav.style.display = 'flex';
+                }
+
+                document.querySelectorAll('[data-nav]').forEach(btn => {
+                    if(btn.dataset.nav === 'transactions') return; 
+                    if (btn.dataset.nav === page || (page === 'history' && btn.dataset.nav === 'dashboard')) {
+                        btn.className = "flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-gold transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:bg-brand-card md:border md:border-brand-border md:shadow-md md:mt-1 group";
+                    } else {
+                        btn.className = "flex-1 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-4 text-brand-muted hover:text-brand-text transition-colors duration-300 md:w-full md:p-4 md:rounded-2xl md:hover:bg-brand-card/50 md:mt-1 group md:border md:border-transparent";
+                    }
+                });
+
+                main.className = "flex-1 overflow-y-auto px-6 py-8 pb-32 md:pb-8 md:px-12 relative z-10 flex flex-col w-full h-full";
+                main.innerHTML = window.Views[page]();
+
+                if (page === 'dashboard') setTimeout(window.ChartManager.renderDashboardChart, 50);
+                if (page === 'analysis') setTimeout(window.ChartManager.renderAnalysisChart, 50);
+                if (page === 'simulator') setTimeout(window.updateSimulator, 50);
+                
+                window.updateNavLabels();
+            }
+        };
+
+        const init = async () => {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    const localState = localStorage.getItem('financeApp_state_' + user.uid);
+                    if (localState) mergeState(JSON.parse(localState));
+
+                    try {
+                        const docRef = doc(db, "users", user.uid);
+                        const docSnap = await getDoc(docRef);
+                        if (docSnap.exists()) {
+                            mergeState(docSnap.data());
+                            localStorage.setItem('financeApp_state_' + user.uid, JSON.stringify(window.AppState));
+                        }
+                    } catch (e) { console.error("Erro ao carregar do Firestore", e); }
+                    
+                    if (!window.AppState.user.onboarded) window.router.navigate('onboarding_1');
+                    else if (!window.AppState.user.hasSeenTutorial) window.router.navigate('tutorial');
+                    else window.router.navigate('dashboard');
+                } else {
+                    window.router.navigate('login');
+                }
+            });
+        };
+
+        window.onload = init;
+    </script>
+</body>
+</html>
